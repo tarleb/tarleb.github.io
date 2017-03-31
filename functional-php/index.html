@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Albert Krewinkel">
+  <title>Functional Programming in PHP</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+  </style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Functional Programming in PHP</h1>
+  <p class="subtitle">Write clean code (or confuse everyone)</p>
+  <p class="author">Albert Krewinkel</p>
+</section>
+
+<section><section id="functional-programming" class="titleslide slide level1"><h1>Functional programming</h1></section><section id="generic-properties" class="slide level2">
+<h2>Generic properties</h2>
+<ul>
+<li>Pure functions (in the mathematical sense)</li>
+<li>No global state</li>
+<li>No <em>side effects</em></li>
+</ul>
+</section><section id="why-should-we-care" class="slide level2">
+<h2>Why should we care?</h2>
+<p>Functional programming</p>
+<ul>
+<li>simplifies some design patterns,</li>
+<li>allows for straight-forward parallelization, and</li>
+<li>makes it simpler to reason about code.</li>
+</ul>
+<aside class="notes">
+<ul>
+<li>Parallelization is not important in PHP, but e.g. in JS.</li>
+<li>Reasoning is simplified as there are no <strong>hidden</strong> states. Everything is explicit.</li>
+</ul>
+</aside>
+</section><section id="example-strategy-pattern" class="slide level2">
+<h2>Example: Strategy Pattern</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">interface</span> RequestHandler { handleRequest<span class="ot">;</span> }
+<span class="kw">class</span> DummyRequestHandler <span class="kw">extends</span> RequestHandler {…} 
+<span class="kw">class</span> HttpRequestHandler <span class="kw">extends</span> RequestHandler {…} 
+
+<span class="kw">function</span> handlePath<span class="ot">(</span><span class="kw">$path</span><span class="ot">,</span> RequestHandler <span class="kw">$handler</span><span class="ot">)</span> {…}
+handlePath<span class="ot">(</span><span class="st">&quot;/app&quot;</span><span class="ot">,</span> <span class="kw">new</span> HttpRequestHandler<span class="ot">());</span></code></pre></div>
+<aside class="notes">
+<ul>
+<li>It’s a classic pattern described by the gang of four.</li>
+<li>Plays nicely with the open/closed principle of SOLID.</li>
+</ul>
+</aside>
+</section></section>
+<section><section id="functions-in-php" class="titleslide slide level1"><h1>Functions in PHP</h1></section><section id="lambda-functions" class="slide level2">
+<h2>Lambda functions</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">function</span> <span class="ot">(</span>int <span class="kw">$x</span><span class="ot">)</span> {
+    <span class="kw">return</span> <span class="dv">2</span> * <span class="kw">$x</span><span class="ot">;</span>
+}<span class="ot">;</span></code></pre></div>
+<aside class="notes">
+<p>Lambda functions (a.k.a. anonymous functions) were introduced in PHP 5.3.</p>
+</aside>
+</section><section id="assigning-functions-to-variables" class="slide level2">
+<h2>Assigning functions to variables</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">$doubleInt</span> = <span class="kw">function</span> <span class="ot">(</span>int x<span class="ot">)</span> {
+    <span class="kw">return</span> <span class="dv">2</span> * <span class="kw">$x</span><span class="ot">;</span>
+}</code></pre></div>
+</section><section id="using-functions" class="slide level2">
+<h2>Using functions</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">$oneDoubled</span> = <span class="fu">call_user_func</span><span class="ot">(</span><span class="kw">$doubleInt</span><span class="ot">,</span> <span class="dv">1</span><span class="ot">);</span>
+<span class="co">// $oneDoubled == 2</span></code></pre></div>
+</section><section id="closures" class="slide level2">
+<h2>Closures</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">$multiplier</span> = <span class="dv">3</span><span class="ot">;</span>
+<span class="kw">$scale</span> = <span class="kw">function</span> <span class="ot">(</span><span class="kw">$x</span><span class="ot">)</span> <span class="kw">use</span> <span class="ot">(</span><span class="kw">$multiplier</span><span class="ot">)</span> {
+    <span class="kw">return</span> <span class="kw">$x</span> * <span class="kw">$multiplier</span><span class="ot">;</span>
+}<span class="ot">;</span>
+
+<span class="fu">echo</span> <span class="fu">call_user_func</span><span class="ot">(</span><span class="kw">$scale</span><span class="ot">,</span> <span class="dv">4</span><span class="ot">);</span>
+<span class="co">// 12</span></code></pre></div>
+</section><section id="callables" class="slide level2">
+<h2>Callables</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> Foo
+{
+    <span class="kw">static</span> <span class="kw">function</span> frob<span class="ot">(</span>int <span class="kw">$x</span><span class="ot">)</span>
+    {
+        <span class="kw">return</span> <span class="kw">$x</span> * <span class="dv">2</span><span class="ot">;</span>
+    }
+}
+
+<span class="kw">$foo</span> = <span class="kw">new</span> Foo<span class="ot">();</span>
+<span class="kw">$bar1</span> = <span class="fu">call_user_func</span><span class="ot">([</span><span class="kw">$foo</span><span class="ot">,</span> <span class="st">&#39;frob&#39;</span><span class="ot">],</span>  <span class="fl">11.5</span><span class="ot">);</span>
+<span class="kw">$bar2</span> = <span class="fu">call_user_func</span><span class="ot">([</span><span class="st">&#39;Foo&#39;</span><span class="ot">,</span> <span class="st">&#39;frob&#39;</span><span class="ot">],</span> <span class="fl">11.5</span><span class="ot">);</span>
+<span class="kw">$bar3</span> = <span class="fu">call_user_func</span><span class="ot">([</span><span class="st">&#39;Foo::frob&#39;</span><span class="ot">],</span>   <span class="fl">11.5</span><span class="ot">);</span></code></pre></div>
+<aside class="notes">
+<p>Second and third versions only work because <code>frob</code> is static.</p>
+</aside>
+</section><section id="callable-objects" class="slide level2">
+<h2>Callable objects</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> Greeter {
+    <span class="kw">private</span> <span class="kw">$msg</span><span class="ot">;</span>
+    <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span><span class="kw">$msg</span><span class="ot">)</span> { <span class="kw">$this</span>-&gt;msg = <span class="kw">$msg</span><span class="ot">;</span> }
+    <span class="kw">function</span> __invoke<span class="ot">()</span> { <span class="fu">echo</span> <span class="kw">$this</span>-&gt;msg<span class="ot">;</span> }
+}
+
+<span class="kw">$greeter</span> = <span class="kw">new</span> Greeter<span class="ot">(</span><span class="st">&quot;Hello, World!&quot;</span><span class="ot">);</span>
+<span class="fu">call_user_func</span><span class="ot">(</span><span class="kw">$greeter</span><span class="ot">);</span>
+<span class="co">// prints &quot;Hello, World!&quot;</span></code></pre></div>
+</section></section>
+<section><section id="working-with-functions-in-php" class="titleslide slide level1"><h1>Working with functions in PHP</h1></section><section id="functions-as-return-values" class="slide level2">
+<h2>Functions as return values</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">function</span> createScaler<span class="ot">(</span>int <span class="kw">$multiplier</span><span class="ot">)</span> {
+    <span class="kw">return</span> <span class="kw">function</span> <span class="ot">(</span><span class="kw">$x</span><span class="ot">)</span> <span class="kw">use</span> <span class="ot">(</span><span class="kw">$multiplier</span><span class="ot">)</span> {
+        <span class="kw">return</span> <span class="kw">$x</span> * <span class="kw">$multiplier</span><span class="ot">;</span>
+    }<span class="ot">;</span>
+}
+
+<span class="fu">echo</span> <span class="fu">call_user_func</span><span class="ot">(</span>createScaler<span class="ot">(</span><span class="dv">3</span><span class="ot">),</span> <span class="dv">4</span><span class="ot">);</span>
+<span class="co">// 12</span></code></pre></div>
+</section><section id="array_-functions" class="slide level2">
+<h2><code>array_*</code> functions</h2>
+<ul>
+<li>process a set of values all at once,</li>
+<li>allow to clearly state ones intend, and</li>
+<li>shield against unwanted side-effects.</li>
+</ul>
+<aside class="notes">
+<p>All <code>array_*</code> functions can be written using <code>foreach</code>.</p>
+<pre><code>function array_map($fn, $arr) {
+    $res = [];
+    foreach ($arr as $a) {
+        $res[] = call_user_func($fn, $a);
+    }
+    return $res;
+}
+</code></pre>
+</aside>
+</section><section id="array_map" class="slide level2">
+<h2><code>array_map</code></h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">$doubleInt</span> = <span class="kw">function</span><span class="ot">(</span>int <span class="kw">$x</span><span class="ot">)</span> {
+    <span class="kw">return</span> <span class="kw">$x</span> &lt;&lt; <span class="dv">1</span><span class="ot">;</span>
+}<span class="ot">;</span>
+<span class="kw">$doubled</span> = <span class="fu">array_map</span><span class="ot">(</span><span class="kw">$doubleInt</span><span class="ot">,</span> <span class="ot">[</span><span class="dv">1</span><span class="ot">,</span> <span class="dv">2</span><span class="ot">,</span> <span class="dv">3</span><span class="ot">,</span> <span class="dv">4</span><span class="ot">,</span> <span class="dv">5</span><span class="ot">]);</span>
+<span class="co">// $doubled == [2, 4, 6, 8, 10]</span></code></pre></div>
+</section><section id="array_filter" class="slide level2">
+<h2><code>array_filter</code></h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">$even</span> = <span class="fu">array_filter</span><span class="ot">([</span><span class="dv">1</span><span class="ot">,</span> <span class="dv">2</span><span class="ot">,</span> <span class="dv">3</span><span class="ot">,</span> <span class="dv">4</span><span class="ot">],</span> <span class="kw">function</span> <span class="ot">(</span>int <span class="kw">$x</span><span class="ot">)</span> {
+    <span class="kw">return</span> <span class="ot">(</span><span class="kw">$x</span> % <span class="dv">2</span> == <span class="dv">0</span><span class="ot">);</span>
+}<span class="ot">);</span>
+<span class="co">// array_values($even) == [2, 4]</span></code></pre></div>
+<aside class="notes">
+<p>Removes values not satisfying the property.</p>
+<p>Note the inverted argument order of <code>array_filter</code> compared to <code>array_map</code>.</p>
+<p>Actual value of <code>$even</code> is <code>[1 =&gt; 2, 3 =&gt; 4]</code>.</p>
+</aside>
+</section><section id="array_column" class="slide level2">
+<h2><code>array_column</code></h2>
+<p>Not really functional programming, but shortens common usecase of <code>array_map</code>:</p>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">$elements</span> = <span class="ot">[</span>
+  <span class="ot">[</span><span class="st">&#39;name&#39;</span> =&gt; <span class="st">&#39;Hydrogen&#39;</span><span class="ot">,</span> <span class="st">&#39;electrons&#39;</span> =&gt; <span class="st">&#39;1s¹&#39;],</span>
+<span class="st">  [&#39;</span>name<span class="st">&#39; =&gt; &#39;</span>Helium<span class="st">&#39;,   &#39;</span>electrons<span class="st">&#39; =&gt; &#39;</span>1s²&#39;<span class="ot">],</span>
+  <span class="ot">[</span><span class="st">&#39;name&#39;</span> =&gt; <span class="st">&#39;Lithium&#39;</span><span class="ot">,</span>  <span class="st">&#39;electrons&#39;</span> =&gt; <span class="st">&#39;2s¹&#39;],</span>
+<span class="st">];</span>
+<span class="st">$names1 = array_column($elements, &#39;</span>name<span class="st">&#39;);</span>
+<span class="st">$names2 = array_map(</span>
+<span class="st">  function($e) { return $e[&#39;</span>name<span class="st">&#39;]; },</span>
+<span class="st">  $elements</span>
+<span class="st">);</span>
+<span class="st">echo $names1 == $names2;</span>
+<span class="st">// 1</span></code></pre></div>
+</section></section>
+<section><section id="examples" class="titleslide slide level1"><h1>Examples</h1></section><section id="readable-code" class="slide level2">
+<h2>Readable code</h2>
+<aside class="notes">
+<p>This is the most important slide of this talk. It demonstrates sensible use cases for functional programming in PHP.</p>
+</aside>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="co">// Convert all strings to lowercase</span>
+<span class="fu">array_map</span><span class="ot">(</span><span class="st">&#39;strtolower&#39;</span><span class="ot">,</span> <span class="kw">$strings</span><span class="ot">);</span>
+
+<span class="co">// Remove empty or whitespace-only strings</span>
+<span class="fu">array_filter</span><span class="ot">(</span><span class="fu">array_map</span><span class="ot">(</span><span class="st">&#39;trim&#39;</span><span class="ot">,</span> <span class="kw">$strings</span><span class="ot">));</span>
+
+<span class="co">// Sort countries by name, using the sort-order</span>
+<span class="co">// of a given locale.</span>
+\<span class="fu">uksort</span><span class="ot">(</span>
+    <span class="kw">$countries</span><span class="ot">,</span>
+    <span class="ot">[</span>\Collator::create<span class="ot">(</span><span class="kw">$language</span><span class="ot">),</span> <span class="st">&#39;compare&#39;</span><span class="ot">]</span>
+<span class="ot">);</span></code></pre></div>
+</section><section id="somewhat-readable-code" class="slide level2">
+<h2>Somewhat readable code</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">private</span> <span class="kw">function</span> orderByUids<span class="ot">(</span><span class="kw">$uids</span><span class="ot">,</span> <span class="kw">$contactPersons</span><span class="ot">)</span>
+{
+    <span class="kw">$uidIndices</span> = \<span class="fu">array_flip</span><span class="ot">(</span><span class="kw">$uids</span><span class="ot">);</span>
+    <span class="kw">$cmp</span> = <span class="kw">function</span><span class="ot">(</span><span class="kw">$a</span><span class="ot">,</span> <span class="kw">$b</span><span class="ot">)</span> <span class="kw">use</span> <span class="ot">(</span><span class="kw">$uidIndices</span><span class="ot">)</span> {
+        <span class="kw">return</span> <span class="ot">(</span><span class="kw">$uidIndices</span><span class="ot">[</span><span class="kw">$a</span>-&gt;getUid<span class="ot">()]</span> -
+                <span class="kw">$uidIndices</span><span class="ot">[</span><span class="kw">$b</span>-&gt;getUid<span class="ot">()])</span>
+    }<span class="ot">;</span>
+    \<span class="fu">usort</span><span class="ot">(</span><span class="kw">$contactPersons</span><span class="ot">,</span> <span class="kw">$cmp</span><span class="ot">);</span>
+    <span class="kw">return</span> <span class="kw">$contactPersons</span><span class="ot">;</span>
+}</code></pre></div>
+<aside class="notes">
+<p>Readability can be argued.</p>
+</aside>
+</section><section id="mutual-dependency-problem" class="slide level2">
+<h2>Mutual dependency: problem</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> HotelController {
+    <span class="kw">public</span> <span class="kw">function</span> showMapAction<span class="ot">()</span> {
+        <span class="kw">$hotels</span> = <span class="kw">$this</span>-&gt;hotelService-&gt;generateJson<span class="ot">(</span><span class="kw">$language</span><span class="ot">);</span>
+        ⋮
+    }
+}
+<span class="kw">class</span> HotelService {
+    <span class="kw">public</span> <span class="kw">function</span> generateJsonData<span class="ot">(</span><span class="kw">$language</span><span class="ot">)</span> {
+        <span class="kw">foreach</span> <span class="ot">(</span><span class="kw">$this</span>-&gt;allHotels <span class="kw">as</span> <span class="kw">$hotel</span><span class="ot">)</span> {
+            ⋮
+            <span class="kw">$url</span> = <span class="co">/* ??? */</span>
+            ⋮
+         }
+    }
+}</code></pre></div>
+<aside class="notes">
+<p>We want a JSON representation of all hotels. The JSON should include the hotels’ URLs, but only the controller has all the information to create an URL for the hotels. The controller should not be botherd with the inner structure of the JSON.</p>
+</aside>
+</section><section id="mutual-dependency-resolution" class="slide level2">
+<h2>Mutual Dependency: resolution</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> HotelController {
+    <span class="kw">public</span> <span class="kw">function</span> showMapAction<span class="ot">()</span> {
+        <span class="kw">$hotels</span> = <span class="kw">$this</span>-&gt;hotelService-&gt;generateJson<span class="ot">(</span>
+            <span class="kw">$language</span><span class="ot">,</span>
+            <span class="kw">$this</span>-&gt;createUriGenerator<span class="ot">());</span>
+        ⋮
+    }
+    <span class="kw">private</span> <span class="kw">function</span> createUriGenerator<span class="ot">()</span> {
+        <span class="kw">return</span> <span class="kw">function</span> <span class="ot">(</span><span class="kw">$hotel</span><span class="ot">)</span> {
+            <span class="kw">return</span> =
+                <span class="kw">$this</span>-&gt;controllerContext<span class="ot">()</span>-&gt;getUriBuilder<span class="ot">()</span>
+                     -&gt;<span class="fu">reset</span><span class="ot">()</span>
+                     -&gt;setTargetPageUid<span class="ot">(</span><span class="dv">5</span><span class="ot">)</span>
+                     -&gt;uriFor<span class="ot">(</span>…<span class="ot">,</span> <span class="ot">[</span><span class="st">&quot;id&quot;</span> =&gt; <span class="kw">$hotel</span>-&gt;getUid<span class="ot">()],</span> …<span class="ot">);</span>
+        }
+    }
+}</code></pre></div>
+<aside class="notes">
+<p>We pass a closure to the JSON generating function. The closure, created in the controller, knows how to generate a URL for a given hotel.</p>
+</aside>
+</section></section>
+<section><section id="drawbacks-pitfalls" class="titleslide slide level1"><h1>Drawbacks &amp; Pitfalls</h1></section><section id="clunky-and-unfamiliar" class="slide level2">
+<h2>Clunky and unfamiliar</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">foreach</span> <span class="ot">(</span><span class="kw">$names</span> <span class="kw">as</span> &amp;<span class="kw">$name</span><span class="ot">)</span> {
+    <span class="kw">$name</span> = <span class="fu">strtolower</span><span class="ot">(</span><span class="kw">$name</span><span class="ot">);</span>
+}</code></pre></div>
+<p>vs</p>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="fu">array_walk</span><span class="ot">(</span><span class="kw">$names</span><span class="ot">,</span> <span class="kw">function</span> <span class="ot">(</span>&amp;<span class="kw">$name</span><span class="ot">,</span> <span class="kw">$index</span><span class="ot">)</span> {
+    <span class="kw">$name</span> = <span class="fu">strtolower</span><span class="ot">(</span><span class="kw">$name</span><span class="ot">);</span>
+}<span class="ot">);</span></code></pre></div>
+</section><section id="inconsistent" class="slide level2">
+<h2>Inconsistent</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="fu">array_map</span><span class="ot">(</span><span class="kw">$callable</span><span class="ot">,</span> <span class="kw">$array</span><span class="ot">);</span></code></pre></div>
+<p>vs</p>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="fu">array_walk</span><span class="ot">(</span><span class="kw">$array</span><span class="ot">,</span> <span class="kw">$callable</span><span class="ot">);</span></code></pre></div>
+</section><section id="type-obscuring-syntax" class="slide level2">
+<h2>Type-obscuring syntax</h2>
+<p>Describing a function by name can make code difficult to understand, especially with higher-order functions:</p>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php">frob<span class="ot">(</span><span class="st">&#39;Vladimir&#39;</span><span class="ot">,</span> <span class="st">&#39;Iosifovich&#39;</span><span class="ot">,</span> <span class="st">&#39;Levensthein&#39;</span><span class="ot">);</span></code></pre></div>
+</section><section id="callable-is-an-unspecific-type" class="slide level2">
+<h2><code>Callable</code> is an unspecific type</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="co">// from Silex\ControllerCollection</span>
+<span class="kw">function</span> match<span class="ot">(</span>
+    <span class="kw">$pattern</span><span class="ot">,</span>
+    <span class="kw">$to</span> = <span class="kw">null</span><span class="ot">)</span> {…}</code></pre></div>
+<p>vs</p>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">function</span> match<span class="ot">(</span>
+    string <span class="kw">$pattern</span><span class="ot">,</span>
+    RequestHandler <span class="kw">$handler</span><span class="ot">)</span> {…}</code></pre></div>
+<aside class="notes">
+<p>Exploring a codebase with an IDE is much simpler if argument types are clear and can be inspected. A lot of typing information is lost when using callables. There has been a <a href="https://wiki.php.net/rfc/callable-types">PHP RFC</a> to change this, but it was defeated with 18 votes in favor and 19 votes against.</p>
+<p>The above example is from the silex framework.</p>
+</aside>
+</section><section id="not-everything-that-can-be-called-is-a-callable" class="slide level2">
+<h2>Not everything that can be called is a <code>callable</code></h2>
+<p>Some PHP “functions” are actually language constructs.</p>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">$arr</span> = <span class="ot">[</span><span class="st">&quot;&quot;</span><span class="ot">,</span> <span class="st">&quot;0&quot;</span><span class="ot">,</span> <span class="st">&quot;1&quot;</span><span class="ot">];</span>
+
+<span class="co">// fails</span>
+<span class="fu">array_map</span><span class="ot">(</span><span class="st">&#39;empty&#39;</span><span class="ot">,</span> <span class="kw">$arr</span><span class="ot">);</span>
+
+<span class="co">// OK</span>
+<span class="fu">array_map</span><span class="ot">(</span><span class="kw">function</span> <span class="ot">(</span><span class="kw">$x</span><span class="ot">)</span> { <span class="kw">return</span> <span class="fu">empty</span><span class="ot">(</span><span class="kw">$x</span><span class="ot">);</span> }<span class="ot">,</span> <span class="kw">$arr</span><span class="ot">);</span>
+<span class="co">// → [true, true, false]</span></code></pre></div>
+</section></section>
+<section><section id="functions-in-other-languages" class="titleslide slide level1"><h1>Functions in other languages</h1></section><section id="javascript" class="slide level2">
+<h2>JavaScript</h2>
+<p>Higher-order functions are very common:</p>
+<ul>
+<li><p>Event handlers</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">document</span>.<span class="at">addEventListener</span>(<span class="st">&#39;click&#39;</span><span class="op">,</span> closeModalWindow)<span class="op">;</span></code></pre></div></li>
+<li><p>Array manipulation</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"> <span class="kw">var</span> doubled <span class="op">=</span> [<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span>].<span class="at">map</span>(<span class="kw">function</span>(x) <span class="op">{</span>
+   <span class="cf">return</span> x <span class="op">*</span> <span class="dv">2</span><span class="op">;</span>
+<span class="op">}</span>)
+<span class="co">// doubled == [2, 4, 6, 8, 10]</span></code></pre></div></li>
+</ul>
+<aside class="notes">
+<p>Note that functions are first class objects in JavaScript.</p>
+</aside>
+</section><section id="javascript-cont." class="slide level2">
+<h2>JavaScript cont.</h2>
+<ul>
+<li><p>Callbacks for async operations</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="va">$</span>.<span class="at">ajax</span>(<span class="op">{</span>…<span class="op">}</span>).<span class="at">done</span>(<span class="va">console</span>.<span class="at">log</span>)
+           .<span class="at">fail</span>(<span class="kw">function</span>(req<span class="op">,</span> text<span class="op">,</span> err) <span class="op">{</span>..<span class="op">}</span>)</code></pre></div></li>
+<li><p>ES6s arrow functions lead to less boilerplate</p>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php">materials.map<span class="ot">(</span>material =&gt; material.price<span class="ot">);</span></code></pre></div></li>
+</ul>
+<aside class="notes">
+<p>The latter differs from the old syntax in that <code>this</code> is handled differently.</p>
+<p>There is an <a href="https://wiki.php.net/rfc/arrow_functions">RFC</a> under discussion suggesting arrow function syntax for PHP.</p>
+</aside>
+</section><section id="typescript" class="slide level2">
+<h2>TypeScript</h2>
+<p>Use of functions similar to JS; functions can be typed:</p>
+<pre class="typescript"><code>type RequestHandler&lt;R extends Request&gt; =
+    (req: R) =&gt; Result
+
+match(pattern: string, handler: RequestHandler) {…}
+</code></pre>
+</section><section id="haskell" class="slide level2">
+<h2>Haskell</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">doubled ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>
+doubled <span class="fu">=</span> (<span class="fu">*</span> <span class="dv">2</span>)
+
+<span class="ot">sumOfDigits ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Int</span>
+sumOfDigits <span class="fu">=</span> sum <span class="fu">.</span> map (\c <span class="ot">-&gt;</span> read [c]) <span class="fu">.</span> show</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">matchAny ::</span> <span class="dt">RoutePattern</span> <span class="ot">-&gt;</span> <span class="dt">Handler</span> () <span class="ot">-&gt;</span> <span class="dt">ApplicationState</span> ()
+matchAny p h <span class="fu">=</span> <span class="kw">do</span>
+  …</code></pre></div>
+</section><section id="adapt-to-your-language" class="slide level2">
+<h2>Adapt to your language</h2>
+<blockquote>
+<p>Every language has its own way. Follow its form, do not try to program as if you were using another language.</p>
+</blockquote>
+</section></section>
+<section><section id="summary" class="titleslide slide level1"><h1>Summary</h1></section><section id="general-advice" class="slide level2">
+<h2>General advice</h2>
+<ul>
+<li>Make state changes explicit.</li>
+<li>Functional programming can improve code quality.</li>
+<li>The “strategy” pattern can be simplified in presence of first-class functions.</li>
+</ul>
+</section><section id="php-specific-advice" class="slide level2">
+<h2>PHP-specific advice</h2>
+<ul>
+<li>Consider using <code>array_</code> methods instead of <code>foreach</code> loops.</li>
+<li>Do so only if it improves code quality.</li>
+<li>Universal sorting functions are worth using.</li>
+<li>Don’t overuse callables.</li>
+</ul>
+</section></section>
+<section><section id="questions" class="titleslide slide level1"><h1>Questions?</h1></section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
