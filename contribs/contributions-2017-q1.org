@@ -1,0 +1,39 @@
+##+TITLE: Open Source Contributions
+#+AUTHOR: Albert Krewinkel
+
+* Q1 2017
+** Pandoc Scholar
+   Working on all related repos and the paper. Pandoc Scholar is a
+   Makefile-powered pandoc wrapper that allows filtering via Lua scripts, even
+   with pandoc versions not including full lua filtering support. No external
+   scripting environment is needed.
+
+*** [[https://github.com/tarleb/panlunatic][Panlunatic]]
+    Panlunatic is a custom pandoc writer that creates pandoc-JSON output. This
+    can be used to write simple filters without an external library.
+
+*** [[https://github.com/pandoc-scholar/scholarly-metadata][Scholarly Metadata]]
+    Define simple standardized methods to process metadata of scientific
+    articles using lua.
+
+** [[https://github.com/osa1/hslua][HsLua]]
+   Take first steps towards an 1.0 release of the library:
+
+   - Moved to ~Foreign.Lua~ module name (was: ~Scripting.Lua~, which is
+     non-standard and less fitting IMHO).
+   - Support all of Lua 5.{1,2,3} and LuaJIT.
+
+** [[https://github.com/tarleb/hslua-aeson][HsLua-Aeson]]
+   Provide a simple way to push haskell data to lua. Only an Aeson instance is
+   required (i.e. a ~deriving Generic~ is enough).
+
+** Pandoc
+*** Built-in support for Lua filters
+    Added a built-in lua-based filtering system.
+*** Org Writer
+    Compatibility with newer Org-mode versions regardings footnotes, plus minor
+    improvements.
+      
+*** Org Reader
+    Improved conformity with Emacs org-mode for tables in lists, markup in meta
+    data values, and /org-ref/ citations.
