@@ -1,0 +1,91 @@
+#+TITLE: Types for Webdevs
+#+SUBTITLE: Cleaner, faster code
+#+AUTHOR: Albert Krewinkel
+
+* Brief intro to Types
+#+BEGIN_notes
+#+END_notes
+** What are types?
+- Provide domain knowledge to the runtime/compiler
+
+** Advantages
+- Restrict the number of possible programs
+- Find errors early
+- Allow optimizations
+
+** Why should we care?
+   
+#+BEGIN_notes
+#+END_notes
+
+* PHP
+** Defining types
+
+#+BEGIN_SRC php
+["a", "b", "c"]   // string[]
+#+END_SRC
+
+#+BEGIN_SRC php
+<?php declare(strict_types = 1);
+$a = function() : array {
+    return ["a", "b", "c"];
+};
+var_dump(call_user_func($a));
+#+END_SRC
+
+
+
+#+BEGIN_SRC php
+<?php declare(strict_types = 1);
+$a = function() : array {
+    return 1;
+};
+var_dump(call_user_func($a));
+#+END_SRC
+
+Result: 
+: PHP Fatal error:  Uncaught TypeError: Return value of
+: {closure}() must be of the type array, integer returned
+
+
+* JS
+
+
+** Duck-typing
+
+#+BEGIN_QUOTE
+If it looks like a duck, swims like a duck, and quacks like a duck, then it
+probably is a duck.
+#+END_QUOTE
+
+** TypeScript
+
+
+* TypeScript
+
+
+* Weak vs Strong Typing
+
+** Weak Typing Example
+
+** Strong Typing Example
+
+** SPL
+
+PHPs
+
+* Gradual Typing
+** Generic types
+
+* Generics
+** Lists
+
+
+* Summary
+
+** General advice
+- Use types
+- Seriously, use types
+
+** PHP-specific advice
+- Use type-hints
