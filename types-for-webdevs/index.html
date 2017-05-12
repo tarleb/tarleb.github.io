@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Albert Krewinkel">
+  <title>Types for Webdevs</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+  </style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">Types for Webdevs</h1>
+  <p class="subtitle">Cleaner, better, faster code</p>
+  <p class="author">Albert Krewinkel</p>
+</section>
+
+<section><section id="brief-intro-to-types" class="titleslide slide level1"><h1>Brief intro to Types</h1></section><section id="what-are-types" class="slide level2">
+<h2>What are types?</h2>
+<p>These are the JavaScript types:</p>
+<ul>
+<li>String (e.g. <code>&quot;Hello, World!&quot;</code>),</li>
+<li>Number (e.g. <code>23</code>, <code>-13E7</code>),</li>
+<li>Boolean (i.e. <code>true</code> or <code>false</code>),</li>
+<li>Null (<code>null</code>),</li>
+<li>Undefined, and</li>
+<li>Object (e.g. <code>{&quot;greeting&quot;: &quot;hello!&quot;}</code>).</li>
+</ul>
+<p>More generally, types are sets of possible values.</p>
+</section><section id="user-defined-types" class="slide level2">
+<h2>User defined types</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> Person {
+    <span class="kw">public</span> name<span class="ot">;</span>
+}</code></pre></div>
+</section><section id="yay-types" class="slide level2">
+<h2>Yay, types!!!!</h2>
+<ul>
+<li>Find errors early.</li>
+<li>Allow optimizations.</li>
+<li>Shift knowledge from programmer to the machine (IntelliSense).</li>
+<li>Restrict the number of possible programs.</li>
+</ul>
+</section><section id="example-dangers-of-missing-type-checking" class="slide level2">
+<h2>Example: Dangers of missing type checking</h2>
+<dl>
+<dt>Mars Climate Orbiter</dt>
+<dd>Interpretation of pound-seconds<br />
+as newton-seconds.
+</dd>
+</dl>
+</section><section id="example-xss" class="slide level2">
+<h2>Example: XSS</h2>
+<p>Problem: user input and program output are the same type.</p>
+<p>Cross-site scripting attack prevention:</p>
+<ul>
+<li>Mark user input as unsafe on the type-level.</li>
+<li>Allow only safe values to be emitted.</li>
+<li>Sanitizing methods convert values from unsafe to safe.</li>
+</ul>
+</section></section>
+<section><section id="defining-and-checking-types" class="titleslide slide level1"><h1>Defining and checking types</h1></section><section id="duck-typing" class="slide level2">
+<h2>Duck typing</h2>
+<blockquote>
+<p>If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck.</p>
+</blockquote>
+</section><section id="examples-of-duck-typing" class="slide level2">
+<h2>Examples of duck typing</h2>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">function</span> <span class="at">Duck</span>() <span class="op">{</span>
+  <span class="kw">this</span>.<span class="at">quack</span> <span class="op">=</span> <span class="kw">function</span>() <span class="op">{</span> <span class="va">console</span>.<span class="at">log</span>(<span class="st">&#39;Quaaaaack&#39;</span>)<span class="op">;</span> <span class="op">};</span>
+  <span class="kw">this</span>.<span class="at">swim</span> <span class="op">=</span> <span class="kw">function</span>() <span class="op">{</span> <span class="va">console</span>.<span class="at">log</span>(<span class="st">&#39;Swimming&#39;</span>)<span class="op">;</span> <span class="op">};</span>
+<span class="op">}</span>
+<span class="kw">function</span> <span class="at">duckAway</span>(duck) <span class="op">{</span>
+  <span class="va">duck</span>.<span class="at">quack</span>()<span class="op">;</span> <span class="va">duck</span>.<span class="at">quack</span>()<span class="op">;</span>
+  <span class="va">duck</span>.<span class="at">swim</span>()<span class="op">;</span> <span class="va">duck</span>.<span class="at">quack</span>()<span class="op">;</span>
+<span class="op">}</span>
+
+<span class="cf">try</span> <span class="op">{</span> <span class="at">duckAway</span>(<span class="kw">new</span> <span class="at">Duck</span>())<span class="op">;</span> <span class="op">}</span>
+<span class="cf">catch</span> (e) <span class="op">{</span> <span class="va">console</span>.<span class="at">error</span>(<span class="st">&quot;Not a duck&quot;</span>)<span class="op">;</span> <span class="op">}</span></code></pre></div>
+</section><section id="properties-of-duck-typing" class="slide level2">
+<h2>Properties of duck typing</h2>
+<p>Duck typing</p>
+<ul>
+<li>is based on the structure of an object,</li>
+<li>is staight-forward, and</li>
+<li>makes code-reuse simple, but</li>
+<li>doesn’t provide many guarantees.</li>
+</ul>
+</section><section id="type-hinting-in-php" class="slide level2">
+<h2>Type-hinting in PHP</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> Person {
+    <span class="kw">public</span> <span class="kw">$name</span><span class="ot">;</span>
+    <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span><span class="kw">$name</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;name = <span class="kw">$name</span><span class="ot">;</span>
+    }
+}
+
+<span class="kw">function</span> greet<span class="ot">(</span>Person <span class="kw">$pers</span><span class="ot">)</span> {
+    <span class="fu">echo</span> <span class="st">&quot;Hello, </span><span class="kw">{$pers-&gt;name}</span><span class="st">!</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">;</span>
+}
+
+greet<span class="ot">(</span><span class="kw">new</span> Person<span class="ot">(</span><span class="st">&quot;John&quot;</span><span class="ot">));</span></code></pre></div>
+</section><section id="scalar-type-hinting-in-php7" class="slide level2">
+<h2>Scalar type-hinting in PHP7</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">function</span> not<span class="ot">(</span>bool <span class="kw">$b</span><span class="ot">)</span> : bool {
+    <span class="kw">return</span> !<span class="kw">$b</span><span class="ot">;</span>
+}<span class="ot">;</span>
+
+<span class="fu">var_dump</span><span class="ot">(</span>not<span class="ot">(</span><span class="kw">true</span><span class="ot">));</span> <span class="co">// bool(false)</span></code></pre></div>
+</section><section id="type-errors-in-php7" class="slide level2">
+<h2>Type errors in PHP7</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">&lt;?php</span> <span class="kw">declare</span><span class="ot">(</span>strict_types = <span class="dv">1</span><span class="ot">);</span>
+
+<span class="kw">function</span> not<span class="ot">(</span>bool <span class="kw">$b</span><span class="ot">)</span> : bool {
+    <span class="kw">return</span> !<span class="kw">$b</span><span class="ot">;</span>
+}<span class="ot">;</span>
+
+<span class="fu">var_dump</span><span class="ot">(</span>not<span class="ot">(</span><span class="dv">1</span><span class="ot">));</span>    <span class="co">// ERROR</span></code></pre></div>
+<pre class="example"><code>PHP Fatal error: Uncaught TypeError: Argument 1 passed
+to not() must be of the type boolean, integer given.
+</code></pre>
+</section><section id="nullable-types" class="slide level2">
+<h2>Nullable types</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> Person {
+    <span class="kw">public</span> <span class="kw">$name</span><span class="ot">;</span>
+    <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span>string <span class="kw">$name</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;name = <span class="kw">$name</span><span class="ot">;</span>
+    }
+}
+
+<span class="kw">function</span> greet<span class="ot">(?</span>Person <span class="kw">$pers</span> = <span class="kw">null</span><span class="ot">)</span> <span class="ot">:</span> void {
+    <span class="kw">$name</span> = <span class="kw">$pers</span> === <span class="kw">null</span> <span class="ot">?</span> <span class="st">&quot;stranger&quot;</span> <span class="ot">:</span> <span class="kw">$pers</span>-&gt;name<span class="ot">;</span>
+    <span class="fu">echo</span> <span class="st">&quot;Hello, </span><span class="kw">{$name}</span><span class="st">!</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">;</span>
+}
+
+greet<span class="ot">(</span><span class="kw">new</span> Person<span class="ot">(</span><span class="st">&quot;John&quot;</span><span class="ot">));</span>  <span class="co">// Hello, John!</span>
+greet<span class="ot">();</span>                    <span class="co">// Hello, stranger!</span></code></pre></div>
+</section><section id="typescript" class="slide level2">
+<h2>TypeScript</h2>
+<p>Same features as PHP, but statically enforced:</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">class</span> Person <span class="op">{</span>
+    <span class="at">constructor</span>(<span class="kw">public</span> <span class="dt">name</span><span class="op">:</span> string) <span class="op">{}</span>
+<span class="op">}</span>
+
+<span class="kw">function</span> <span class="at">greet</span>(person<span class="op">?</span>: Person)<span class="op">:</span> <span class="kw">void</span> <span class="op">{</span>
+  <span class="kw">const</span> name <span class="op">=</span> person <span class="op">?</span> <span class="va">person</span>.<span class="at">name</span> : <span class="st">&quot;stranger&quot;</span><span class="op">;</span>
+  <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;Hello, &quot;</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">&quot;!&quot;</span>)<span class="op">;</span>
+<span class="op">}</span>
+
+<span class="at">greet</span>(<span class="kw">new</span> <span class="at">Person</span>(<span class="st">&quot;John&quot;</span>))<span class="op">;</span>  <span class="co">// Hello, John!</span>
+<span class="at">greet</span>()<span class="op">;</span>                    <span class="co">// Hello, stranger</span></code></pre></div>
+</section></section>
+<section><section id="static-vs-dynamic" class="titleslide slide level1"><h1>Static vs Dynamic</h1></section><section id="comparison-of-static-and-dynamic-typing" class="slide level2">
+<h2>Comparison of static and dynamic typing</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Property</th>
+<th>Static Typing</th>
+<th>Dynamic Typing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Type checking based on</td>
+<td>source code</td>
+<td>runtime values</td>
+</tr>
+<tr class="even">
+<td>Errors occur at</td>
+<td>compile time</td>
+<td>runtime</td>
+</tr>
+<tr class="odd">
+<td>Code reuse</td>
+<td>save</td>
+<td>simple</td>
+</tr>
+<tr class="even">
+<td>Optimizations</td>
+<td>simple</td>
+<td>sophisticated (JIT)</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>The table assumes that a compiler performes static type checking. This is usually true, but doesn’t have to be the case, as IDEs can perform type-checking and give immediate feedback to the developer.</p>
+</aside>
+</section><section id="improved-maintainability-with-static-typing" class="slide level2">
+<h2>Improved maintainability with static typing</h2>
+<p>Study by Hanenberg et al. on software maintainability:</p>
+<blockquote>
+<p>The results show rigorous empirical evidence that static types are indeed beneficial to [maintaining software and understanding undocumented code].</p>
+</blockquote>
+<aside class="notes">
+<p>Full paper: An Empirical study on the impact of static typing on software maintainability, <em>Stefan Hanenberg, Sebastian Kleinschmager, Romain Robbes, Éric Tanter, Andreas Stefik</em>. Empir Software Eng, (2013-12-11). DOI: 10.1007/s10664-013-9289-1.</p>
+</aside>
+</section><section id="faster-development" class="slide level2">
+<h2>Faster development</h2>
+<blockquote>
+<p>[Our] exploratory analysis [shows] that developers using a dynamic type system tend to look at different files more frequently when doing programming tasks—which is a potential reason for the observed differences in time.</p>
+</blockquote>
+</section><section id="javascript-vs-typescript" class="slide level2">
+<h2>JavaScript vs TypeScript</h2>
+<p>JavaScript is dynamically typed, TypeScript offers static type-checking.</p>
+<blockquote>
+<p>This seems to be an indicator that the effect of static type systems is larger than often assumed, at least in comparison to code completion.</p>
+</blockquote>
+<p>Tooling matters, but static typing is more important.</p>
+<aside class="notes">
+<p>An Empirical Investigation of the Effects of Type Systems and Code Completion on API Usability using TypeScript and JavaScript in MS Visual Studio. <em>Lars Fischer, Stefan Hanenberg</em>, Proceedings of the 11th Symposium on Dynamic Languages (154–167), 2015.</p>
+</aside>
+</section><section id="most-languages-less-prone-to-defects-have-static-typing" class="slide level2">
+<h2>Most languages less prone to defects have static typing</h2>
+<p>Languages more prone to defects:</p>
+<ul>
+<li>C, C++</li>
+<li>PHP</li>
+</ul>
+<p>Languages less prone to defects:</p>
+<ul>
+<li>TypeScript</li>
+<li>Scala</li>
+<li>Haskell</li>
+</ul>
+<aside class="notes">
+<p>It should be kept in mind that PHP is frequently used by beginners, which will likely have influenced the result.</p>
+<p>Also</p>
+<blockquote>
+<p>One should take care not to overestimate the impact of language on defects. While these relationships are statistically significan, the effects are quite small.</p>
+</blockquote>
+<p>Taken from Ray et al., 2014 (A Large Scale Study of Programming Languages and Code Quality in Github.</p>
+</aside>
+</section></section>
+<section><section id="getting-the-most-out-of-types" class="titleslide slide level1"><h1>Getting the most out of types</h1></section><section id="subtypes" class="slide level2">
+<h2>Subtypes</h2>
+<p>Computers have many ways to represent numbers:</p>
+<ul>
+<li>Integer (e.g. <code>42</code>)</li>
+<li>Float (e.g. <code>0.2</code>)</li>
+<li>Double (e.g. <code>0.30000000000000004</code>)</li>
+</ul>
+<p>Each is a <em>subtype</em> of the <strong>Number</strong> type.</p>
+</section><section id="interfaces" class="slide level2">
+<h2>Interfaces</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">interface</span> Named {
+    <span class="kw">public</span> <span class="kw">function</span> getName<span class="ot">()</span> : string<span class="ot">;</span>
+}
+
+<span class="kw">class</span> Person <span class="kw">implements</span> Named {
+    <span class="kw">private</span> <span class="kw">$name</span><span class="ot">;</span>
+    <span class="kw">public</span> <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span>string <span class="kw">$name</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;name = <span class="kw">$name</span><span class="ot">;</span>
+    }
+
+    <span class="kw">public</span> <span class="kw">function</span> getName<span class="ot">()</span> : string {
+        <span class="kw">return</span> <span class="kw">$this</span>-&gt;name<span class="ot">;</span>
+    }
+}</code></pre></div>
+</section><section id="using-interfaces-as-types" class="slide level2">
+<h2>Using interfaces as types</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">interface</span> Named {
+    <span class="kw">public</span> <span class="kw">function</span> getName<span class="ot">()</span> : string<span class="ot">;</span>
+}
+
+<span class="kw">function</span> greet<span class="ot">(</span>Named <span class="kw">$named</span><span class="ot">)</span> {
+    <span class="fu">echo</span> <span class="st">&quot;Hello, {</span><span class="kw">$named</span><span class="st">-&gt;getName()}!</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">;</span>
+}</code></pre></div>
+<aside class="notes">
+<p>The function <code>greet</code> accepts any object whose type is a subtype of <code>Named</code>.</p>
+</aside>
+</section><section id="liskov-substitution-principle" class="slide level2">
+<h2>Liskov substitution principle</h2>
+<p>The <strong>L</strong> in <strong>SOLID</strong>.</p>
+<blockquote>
+<p>Subtype Requirement: Let <span class="math inline"><em>Φ</em>(<em>x</em>)</span> be a property provable about objects <span class="math inline"><em>x</em></span> of type <span class="math inline"><em>T</em></span>. Then <span class="math inline"><em>Φ</em>(<em>y</em>)</span> should be true for objects <span class="math inline"><em>y</em></span> of type <span class="math inline"><em>S</em></span> where <span class="math inline"><em>S</em></span> is a subtype of <span class="math inline"><em>T</em></span>.</p>
+</blockquote>
+</section><section id="liskov-substitution-principle-cont." class="slide level2">
+<h2>Liskov substitution principle cont.</h2>
+<blockquote>
+<p>Objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program.</p>
+</blockquote>
+<p>Numbers:</p>
+<p>If multiplication is allowed for <strong>Number</strong>, then it should behave similarly for <strong>Float</strong>.</p>
+</section><section id="interface-segregation-principle" class="slide level2">
+<h2>Interface segregation principle</h2>
+<p>The <strong>I</strong> in <strong>SOLID</strong>,</p>
+<blockquote>
+<p>Many client-specific interfaces are better than one general-purpose interface.</p>
+</blockquote>
+<p>Dividing your types into smaller subtypes is a good idea.</p>
+</section></section>
+<section><section id="adding-types" class="titleslide slide level1"><h1>Adding types</h1></section><section id="gradual-typing" class="slide level2">
+<h2>Gradual typing</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">public</span> Region {
+    <span class="kw">private</span> <span class="kw">$name</span><span class="ot">;</span>
+    <span class="kw">private</span> <span class="kw">$longitude</span><span class="ot">;</span>
+    <span class="kw">private</span> <span class="kw">$latitude</span><span class="ot">;</span>
+    <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span><span class="kw">$name</span><span class="ot">,</span> <span class="kw">$long</span><span class="ot">,</span> <span class="kw">$lat</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;name = <span class="kw">$name</span><span class="ot">;</span> <span class="kw">$this</span>-&gt;longitude = <span class="kw">$long</span><span class="ot">;</span>
+        <span class="kw">$this</span>-&gt;latitude = <span class="kw">$lat</span><span class="ot">;</span>
+    }
+}
+
+<span class="kw">function</span> showOnMap<span class="ot">(</span><span class="kw">$region</span><span class="ot">)</span> { <span class="st">...</span> }</code></pre></div>
+</section><section id="add-some-type-hints" class="slide level2">
+<h2>Add some type hints</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">public</span> Region {
+    <span class="kw">private</span> <span class="kw">$name</span><span class="ot">;</span>
+    <span class="kw">private</span> <span class="kw">$longitude</span><span class="ot">;</span>
+    <span class="kw">private</span> <span class="kw">$latitude</span><span class="ot">;</span>
+    <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span><span class="kw">$name</span><span class="ot">,</span> double <span class="kw">$long</span><span class="ot">,</span> double <span class="kw">$lat</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;name = <span class="kw">$name</span><span class="ot">;</span> <span class="kw">$this</span>-&gt;longitude = <span class="kw">$long</span><span class="ot">;</span>
+        <span class="kw">$this</span>-&gt;latitude = <span class="kw">$lat</span><span class="ot">;</span>
+    }
+}
+
+<span class="kw">function</span> showOnMap<span class="ot">(</span><span class="kw">$region</span><span class="ot">)</span> { <span class="st">...</span> }</code></pre></div>
+</section><section id="extract-types" class="slide level2">
+<h2>Extract types</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> Coordinates {
+    ⋮
+    <span class="kw">public</span> <span class="kw">function</span> getLatitude<span class="ot">()</span>: double { … }
+    <span class="kw">public</span> <span class="kw">function</span> getLongitude<span class="ot">()</span>: double { … }
+}
+
+<span class="kw">interface</span> Locateable {
+    <span class="kw">public</span> <span class="kw">function</span> getCoordinates<span class="ot">()</span>: Coordinates<span class="ot">;</span>
+}
+
+<span class="kw">class</span> Region <span class="kw">implements</span> Locateable { … }
+
+<span class="kw">function</span> showOnMap<span class="ot">(</span>Locateable <span class="kw">$region</span><span class="ot">)</span> { … }</code></pre></div>
+</section></section>
+<section><section id="summary" class="titleslide slide level1"><h1>Summary</h1></section><section id="some-advice" class="slide level2">
+<h2>Some advice</h2>
+<ul>
+<li>Use types</li>
+<li>Seriously, use types</li>
+</ul>
+</section></section>
+<section><section id="implicit-type-conversions" class="titleslide slide level1"><h1>Implicit type conversions</h1></section><section id="type-conversion" class="slide level2">
+<h2>Type conversion</h2>
+<p>The PHP manual:</p>
+<blockquote>
+<p>The type of a variable is not usually set by the programmer; rather, it is decided at runtime by PHP depending on the context in which that variable is used.</p>
+</blockquote>
+</section><section id="can-result-in-subtle-bugs" class="slide level2">
+<h2>Can result in subtle bugs</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">function</span> isFalse<span class="ot">(</span><span class="kw">$x</span><span class="ot">)</span> {
+    <span class="kw">return</span> <span class="kw">$x</span> == <span class="dv">0</span><span class="ot">;</span>   <span class="co">// </span><span class="al">BUG</span>
+}
+
+<span class="fu">var_dump</span><span class="ot">(</span>isFalse<span class="ot">(</span><span class="kw">false</span><span class="ot">));</span>  <span class="co">// bool(true)</span>
+<span class="fu">var_dump</span><span class="ot">(</span>!<span class="dt">(bool)</span> <span class="kw">false</span><span class="ot">);</span>   <span class="co">// bool(true)</span>
+
+<span class="fu">var_dump</span><span class="ot">(</span>isFalse<span class="ot">(</span><span class="st">&quot;0&quot;</span><span class="ot">));</span>    <span class="co">// bool(true)</span>
+<span class="fu">var_dump</span><span class="ot">(</span>!<span class="dt">(bool)</span> <span class="st">&quot;0&quot;</span><span class="ot">);</span>     <span class="co">// bool(true)</span>
+
+<span class="fu">var_dump</span><span class="ot">(</span>isFalse<span class="ot">(</span><span class="st">&quot;00&quot;</span><span class="ot">));</span>   <span class="co">// bool(true)</span>
+<span class="fu">var_dump</span><span class="ot">(</span>!<span class="dt">(bool)</span> <span class="st">&quot;00&quot;</span><span class="ot">);</span>    <span class="co">// bool(false)</span></code></pre></div>
+</section><section id="semantics-of-operators" class="slide level2">
+<h2>Semantics of operators</h2>
+<p>What is <code>3 * &quot;Hello&quot;</code>?</p>
+<dl>
+<dt>JavaScript</dt>
+<dd>NaN
+</dd>
+<dt>PHP</dt>
+<dd>0
+</dd>
+<dt>Python</dt>
+<dd>“HelloHelloHello”
+</dd>
+<dt>TypeScript</dt>
+<dd>Compile time error
+</dd>
+</dl>
+</section></section>
+<section><section id="generics" class="titleslide slide level1"><h1>Generics</h1></section><section id="list" class="slide level2">
+<h2>List</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> MyList {
+    <span class="kw">protected</span> <span class="kw">$item</span><span class="ot">;</span>
+    <span class="kw">protected</span> <span class="kw">$next</span><span class="ot">;</span>
+    <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span><span class="kw">$item</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;item = <span class="kw">$item</span><span class="ot">;</span>
+    }
+    <span class="kw">function</span> getItem<span class="ot">()</span> {
+        <span class="kw">return</span> <span class="kw">$this</span>-&gt;item<span class="ot">;</span>
+    }
+    <span class="kw">function</span> getNext<span class="ot">()</span> : <span class="ot">?</span>MyList {
+        <span class="kw">return</span> <span class="kw">$this</span>-&gt;<span class="fu">next</span><span class="ot">;</span>
+    }
+    <span class="kw">function</span> setNext<span class="ot">(</span>MyList <span class="kw">$next</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;<span class="fu">next</span> = <span class="kw">$next</span><span class="ot">;</span>
+    }
+}
+
+<span class="kw">$a</span> = <span class="kw">new</span> MyList<span class="ot">(</span><span class="st">&quot;foo&quot;</span><span class="ot">);</span>
+<span class="kw">$a</span>-&gt;setNext<span class="ot">(</span><span class="kw">new</span> MyList<span class="ot">(</span><span class="dv">1</span><span class="ot">));</span>
+
+<span class="kw">for</span> <span class="ot">(</span><span class="kw">$cur</span> = <span class="kw">$a</span><span class="ot">;</span> <span class="kw">$cur</span><span class="ot">;</span> <span class="kw">$cur</span> = <span class="kw">$cur</span>-&gt;<span class="fu">next</span><span class="ot">)</span> {
+    <span class="fu">echo</span> <span class="kw">$cur</span>-&gt;item . <span class="st">&quot;</span><span class="kw">\n</span><span class="st">&quot;</span><span class="ot">;</span>
+}</code></pre></div>
+</section><section id="integer-list" class="slide level2">
+<h2>Integer List</h2>
+<div class="sourceCode"><pre class="sourceCode php"><code class="sourceCode php"><span class="kw">class</span> IntList {
+    <span class="kw">private</span> <span class="kw">$item</span><span class="ot">;</span>
+    <span class="kw">private</span> <span class="kw">$next</span><span class="ot">;</span>
+    <span class="kw">function</span> <span class="fu">__construct</span><span class="ot">(</span>int <span class="kw">$item</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;item = <span class="kw">$item</span><span class="ot">;</span>
+    }
+    <span class="kw">function</span> getItem<span class="ot">()</span>: int {
+        <span class="kw">return</span> <span class="kw">$this</span>-&gt;item<span class="ot">;</span>
+    }
+    <span class="kw">function</span> getNext<span class="ot">()</span>: <span class="ot">?</span>IntList {
+        <span class="kw">return</span> <span class="kw">$this</span>-&gt;<span class="fu">next</span><span class="ot">;</span>
+    }
+    <span class="kw">function</span> setNext<span class="ot">(</span>IntList <span class="kw">$next</span><span class="ot">)</span> {
+        <span class="kw">$this</span>-&gt;<span class="fu">next</span> = <span class="kw">$next</span><span class="ot">;</span>
+    }
+}</code></pre></div>
+</section><section id="unsafe-generic-list-in-typescript" class="slide level2">
+<h2>Unsafe generic list in TypeScript</h2>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">class</span> MyList <span class="op">{</span>
+    <span class="kw">private</span> next<span class="op">?</span>: any<span class="op">;</span>
+    <span class="at">constructor</span>(<span class="kw">public</span> <span class="dt">item</span><span class="op">:</span> any) <span class="op">{}</span>
+    <span class="at">getNext</span>()<span class="op">:</span> any <span class="op">{</span>
+        <span class="cf">return</span> <span class="kw">this</span>.<span class="at">next</span><span class="op">;</span>
+    <span class="op">}</span>
+    <span class="at">setNext</span>(<span class="dt">nextList</span><span class="op">:</span> any) <span class="op">{</span>
+        <span class="kw">this</span>.<span class="at">next</span> <span class="op">=</span> nextList<span class="op">;</span>
+    <span class="op">}</span>
+<span class="op">}</span>
+
+<span class="kw">const</span> a <span class="op">=</span> <span class="kw">new</span> <span class="at">MyList</span>(<span class="st">&quot;hello&quot;</span>)<span class="op">;</span>
+<span class="va">a</span>.<span class="at">setNext</span>(<span class="kw">new</span> <span class="at">MyList</span>(<span class="st">&quot;world&quot;</span>))<span class="op">;</span></code></pre></div>
+</section><section id="safely-typed-generic-list" class="slide level2">
+<h2>Safely typed generic list</h2>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">class</span> List<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">{</span>
+    <span class="kw">private</span> next<span class="op">?</span>: List<span class="op">&lt;</span>T<span class="op">&gt;;</span>
+    <span class="at">constructor</span>(<span class="kw">public</span> <span class="dt">item</span><span class="op">:</span> T) <span class="op">{}</span>
+    <span class="at">getNext</span>()<span class="op">:</span> List<span class="op">&lt;</span>T<span class="op">&gt;</span> <span class="op">{</span>
+        <span class="cf">return</span> <span class="kw">this</span>.<span class="at">next</span><span class="op">;</span>
+    <span class="op">}</span>
+    <span class="at">setNext</span>(<span class="dt">nextList</span><span class="op">:</span> List<span class="op">&lt;</span>T<span class="op">&gt;</span>) <span class="op">{</span>
+        <span class="kw">this</span>.<span class="at">next</span> <span class="op">=</span> nextList<span class="op">;</span>
+    <span class="op">}</span>
+<span class="op">}</span>
+
+<span class="kw">const</span> a <span class="op">=</span> <span class="kw">new</span> List<span class="op">&lt;</span>string<span class="op">&gt;</span>(<span class="st">&quot;hello&quot;</span>)<span class="op">;</span>
+<span class="va">a</span>.<span class="at">setNext</span>(<span class="kw">new</span> List<span class="op">&lt;</span>string<span class="op">&gt;</span>(<span class="st">&quot;world&quot;</span>))<span class="op">;</span>
+<span class="co">// a.setNext(new List&lt;number&gt;(1));  Won&#39;t compile</span></code></pre></div>
+</section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
