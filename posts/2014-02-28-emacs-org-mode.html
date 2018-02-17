@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+      vocab="http://schema.org/" typeof="Blog">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>zeitkraut – Blogging with Hakyll and Emacs Org-mode</title>
+    <link rel="canonical" href="https://zeitkraut.de/posts/2014-02-28-emacs-org-mode.html" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/img/zeitlens-logo-default.svg" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/zeitlens.css" />
+    <link rel="author"     href="/contact.html#albertkrewinkel" />
+    <link property="image" href="/img/zeitlens-logo-default.svg" />
+    <link rel="apple-touch-icon" href="/img/zeitlens-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/zeitlens-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/zeitlens-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/zeitlens-icon-144x144.png" />
+    <link rel="alternate"  href="/atom.xml" title="ATOM"
+          type="application/atom+xml" />
+    <script type="text/javascript" async="async" src="/scripts/zeitlens.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="header">
+
+        <nav id="navbar" class="navbar navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-exl-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="fa fa-bars"></span>
+              </button>
+              <a href="/">
+                <div class="navbar-brand">
+                  <!-- ZeitKraut logo -->
+                  <div class="logo inline-logo" id="brand-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</div>
+                  zeitkraut
+                </div>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse navbar-exl-collapse">
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/archive.html">Archive</a></li>
+                <li><a href="/tags.html">Tags</a></li>
+                <li><a href="/colophon.html">Colophon</a></li>
+                <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div id="headerImageContainer">
+          <img id="headerImg" src="/img/header_400x129.jpg" class="img-responsive" alt="" />
+        </div>
+      </div>
+
+      <div id="content" class="container">
+        <article vocab="http://schema.org/" typeof="BlogPosting">
+  <h1 property="headline">Blogging with Hakyll and Emacs Org-mode</h1>
+
+  <div class="post-metadata">
+    <div class="post-date">
+      <time datetime="2014-02-28" property="datePublished">February 28, 2014</time>
+    </div>
+    <div class="post-tags">tagged with: <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/pandoc.html">pandoc</a>, <a href="/tags/emacs.html">emacs</a>, <a href="/tags/haskell.html">haskell</a></div>
+  </div>
+
+  <div property="articleBody">
+    <p>I finally did it! I polished up my Haskell-fu and wrote a <a href="http://johnmacfarlane.net/pandoc">Pandoc</a> reader for <a href="http://orgmode.org">Emacs Org-mode</a>. As a result, I can now write blog posts in <code>Org-mode</code> instead of <code>Markdown</code>.</p>
+<p>You can find the source code <del>on my github org branch</del> in Pandoc’s <a href="https://github.com/jgm/pandoc/blob/master/src/Text/Pandoc/Readers/Org.hs">main repo</a>.</p>
+<h2 id="supported-features">Supported Features</h2>
+<p>Not everything works the way it does in Emacs (yet), but support is sufficient for basic document parsing. Here is a short demonstration of currently supported features:</p>
+<h3 id="headlines">Headlines</h3>
+<ol>
+<li><p>Another Headline</p>
+<pre class="ORG"><code>*** Headlines
+
+**** Another Headline
+</code></pre></li>
+</ol>
+<h3 id="ordered-lists">Ordered Lists</h3>
+<ol>
+<li>First</li>
+<li>Second</li>
+<li>Third</li>
+</ol>
+<pre class="ORG"><code>1) First
+2) Second
+3) Third
+</code></pre>
+<h3 id="unorders-lists">Unorders Lists</h3>
+<ul>
+<li>Pandoc</li>
+<li>Haskell</li>
+<li>Emacs
+<ul>
+<li>Gnus</li>
+<li>Org-Mode</li>
+</ul></li>
+</ul>
+<pre class="ORG"><code>- Pandoc
+- Haskell
+- Emacs
+  + Gnus
+  + Org-Mode
+</code></pre>
+<h3 id="markup">Markup</h3>
+<ul>
+<li><em>emph</em></li>
+<li><strong>strong</strong></li>
+<li><strong><em>strong-emph</em></strong></li>
+<li><code>code</code></li>
+<li><del>strikeout</del></li>
+<li>Sub- and Superscripts
+<ul>
+<li>2<sup>n</sup></li>
+<li>2<sup>n-1</sup></li>
+<li>a<sub>n</sub></li>
+<li>a<sub>n+1</sub></li>
+</ul></li>
+</ul>
+<pre class="ORG"><code>- /emph/
+- *strong*
+- */strong-emph/*
+- =code=
+- +strikeout+
+- Sub- and Superscripts
+  + 2^n
+  + 2^{n-1}
+  + a_n
+  + a_{n+1}
+</code></pre>
+<h3 id="source-code">Source Code</h3>
+<p>Muttering a greeting in Haskell:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">main <span class="fu">=</span> putStrLn greeting</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">where</span> greeting <span class="fu">=</span> <span class="st">&quot;moin&quot;</span></a></code></pre></div>
+<pre class="ORG"><code>#+BEGIN_SRC haskell
+main :: IO ()
+main = putStrLn greeting
+  where greeting = &quot;moin&quot;
+</code></pre>
+<p>#+END<sub>SRC</sub></p>
+<h3 id="table">Table</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Language</th>
+<th style="text-align: left;">Typing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Haskell</td>
+<td style="text-align: left;">strong, static</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Lisp</td>
+<td style="text-align: left;">strong, dynamic</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">JavaScript</td>
+<td style="text-align: left;">weak, dynamic</td>
+</tr>
+</tbody>
+</table>
+<pre class="ORG"><code>| Language    | Typing          |
+|-------------+-----------------|
+| &lt;l&gt;         | &lt;l&gt;             |
+| Haskell     | strong, static  |
+| Common Lisp | strong, dynamic |
+| JavaScript  | weak, dynamic   |
+</code></pre>
+  </div>
+</article>
+
+      </div>
+    </div>
+
+    <footer>
+      <div class="container"
+           vocab="http://purl.org/dc/terms/">
+        <div id="copyright-info">
+          <span class="inline-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</span>
+          <span property="title">ZeitKraut</span>,
+          <span class="copyright-notice">
+            Copyright © 2013–2018
+            <a href="/contact.html#content"
+               property="http://creativecommons.org/ns#attributionName"
+               rel="http://creativecommons.org/ns#attributionURL">Albert
+               Krewinkel</a>.
+          </span>
+        </div>
+        <div id="legal-info">
+          Text is available under the
+          <a rel="license"
+             href="http://creativecommons.org/licenses/by-sa/3.0/de/deed.en_US">
+            <abbr title="Creative Commons Attribution-ShareAlike 3.0 Germany">
+              CC BY‑SA 3.0 DE</abbr></a> license.
+        </div>
+        <div id="feed-and-code">
+          Read the <a href="/atom.xml">feed <span class="fa fa-rss"></span></a> or
+          grab the
+          <a href="https://github.com/tarleb/zeitkraut-blog"
+             >code <span class="fa fa-github"></span></a>!
+        </div>
+      </div>
+    </footer>
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+  </body>
+</html>

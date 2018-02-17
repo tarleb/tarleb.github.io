@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+      vocab="http://schema.org/" typeof="Blog">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>zeitkraut – Exploring HTTP Headers with <code>netcat</code></title>
+    <link rel="canonical" href="https://zeitkraut.de/posts/2013-11-05-exploring-http-headers.html" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/img/zeitlens-logo-default.svg" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/zeitlens.css" />
+    <link rel="author"     href="/contact.html#albertkrewinkel" />
+    <link property="image" href="/img/zeitlens-logo-default.svg" />
+    <link rel="apple-touch-icon" href="/img/zeitlens-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/zeitlens-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/zeitlens-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/zeitlens-icon-144x144.png" />
+    <link rel="alternate"  href="/atom.xml" title="ATOM"
+          type="application/atom+xml" />
+    <script type="text/javascript" async="async" src="/scripts/zeitlens.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="header">
+
+        <nav id="navbar" class="navbar navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-exl-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="fa fa-bars"></span>
+              </button>
+              <a href="/">
+                <div class="navbar-brand">
+                  <!-- ZeitKraut logo -->
+                  <div class="logo inline-logo" id="brand-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</div>
+                  zeitkraut
+                </div>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse navbar-exl-collapse">
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/archive.html">Archive</a></li>
+                <li><a href="/tags.html">Tags</a></li>
+                <li><a href="/colophon.html">Colophon</a></li>
+                <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div id="headerImageContainer">
+          <img id="headerImg" src="/img/header_400x129.jpg" class="img-responsive" alt="" />
+        </div>
+      </div>
+
+      <div id="content" class="container">
+        <article vocab="http://schema.org/" typeof="BlogPosting">
+  <h1 property="headline">Exploring HTTP Headers with <code>netcat</code></h1>
+
+  <div class="post-metadata">
+    <div class="post-date">
+      <time datetime="2013-11-05" property="datePublished">November  5, 2013</time>
+    </div>
+    <div class="post-tags">tagged with: <a href="/tags/command-line.html">command-line</a>, <a href="/tags/http.html">http</a>, <a href="/tags/shell%20script.html">shell script</a>, <a href="/tags/linux.html">linux</a></div>
+  </div>
+
+  <div property="articleBody">
+    <p>One of the many great things about free and open source software and the whole GNU/Linux ecosystem are the simple yet powerful tools available. The possibilities enabled by almost trivial programs are incredible. A very positive side effect this has on me is that I like to go and explore technologies with the tools at my disposal. My latest experiments revolved around the <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> protocol, specifically <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> headers, and very basic open source networking tools.</p>
+<h2 id="the-hypertext-transfer-protocol">The HyperText Transfer Protocol</h2>
+<p>Webservers on the internet sending a website to a browser use the HyperText Transfer Protocol (<abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr>) to do so. Along with the HTML data for the page itself, the server answer includes additional information: Response code, cookies, and how the browser or proxy server should handle the contents is transfered within the <em><abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> header</em>. The ability of the headers to control state on the client side is what makes them so interesting and the reason why we are going to have a closer look at them.</p>
+<h2 id="communicating-with-netcat">Communicating with <code>netcat</code></h2>
+<p>Instead of building our own <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> client and server implementations – that would be total overkill – we restrict the goal to a simple networking tool that can be made to receive, send and alter basic <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> commands: <code>netcat</code>, the self-described TCP/IP swiss army knife, combined with basic shell scripts.</p>
+<p>We start by setting up a basic echoing server which sends everything back the same way it was received.</p>
+<pre class="shell"><code>nc -l -p 8042 -e &#39;/bin/cat&#39;</code></pre>
+<p>Pointing the browser at <code>http://localhost:8042</code>, then killing the <code>netcat</code> process manually by hitting <code>Control-C</code>, we can see the headers we sent within our browser. Everything that is send to our simple server is put through the <code>cat</code> program, which just passes it on to STDOUT, which is then sent back to the connecting browser. The process has to be terminated manually, as it doesn’t know when to stop listening for more input. It’s crude, yet effective.</p>
+<h2 id="shell-scripting-for-more-advanced-features">Shell Scripting for more advanced features</h2>
+<p>The above is neither comfortable to use nor very good to toy with, so we replace <code>cat</code> with a script of our own, we’ll call it <code>exploring-http.sh</code>:</p>
+<pre class="shell"><code>#!/bin/sh
+
+# Keep reading everything until we hit the first empty line
+read_headers ()
+{
+    read i
+    while [ -n &quot;$i&quot; ] &amp;&amp;
+          [ &quot;$(echo -n &quot;\r\n&quot;)&quot; != &quot;$i&quot; ] &amp;&amp;
+          [ &quot;$(echo -n &quot;\n&quot;)&quot; != &quot;$i&quot; ]
+    do
+        echo &quot;$i&quot;
+        read i
+    done
+}
+request_headers=&quot;$(read_headers)&quot;
+
+# Get some response headers ready
+response_headers ()
+{
+    printf &quot;HTTP/1.1 200 OK\r\n&quot;
+    printf &quot;Content-Type: text/plain\r\n&quot;
+    printf &quot;\r\n&quot;
+}
+
+# Send the response
+respond ()
+{
+    local response_headers=&quot;$(response_headers)&quot;
+    echo &quot;${response_headers}&quot;
+    echo &quot;Browser Request Headers&quot;
+    echo &quot;=======================&quot;
+    echo &quot;$request_headers&quot;
+    echo &quot;\r\n&quot;
+    echo &quot;Server Response Headers&quot;
+    echo &quot;=======================&quot;
+    echo &quot;${response_headers}&quot;
+}
+
+respond</code></pre>
+<p>The request send by the browser is read till we reach the first black line, signaling the end of the request header. This time, we follow the protocol by prefixing the content with very simple response headers before sending it back to the browser. We also don’t have to manually terminate our <code>netcat</code> server, it terminates after answering to the request. Starting it again after each request is tedious, so we automate it and put it into a loop, restarting the server immediately once it terminates.</p>
+<pre class="shell"><code>sh -c &#39;while true; do nc -l -p 8042 -e exploring-http.sh; done&#39;</code></pre>
+<p>Now we are free to experiment with <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> headers and the way browser and server interact. For example, we can let the server add a <code>Last-Modified</code> header, the content of which should be sent back by the browser in the next request:</p>
+<pre class="shell"><code>response_headers ()
+{
+    printf &quot;HTTP/1.1 200 OK\r\n&quot;
+    printf &quot;Content-Type: text/plain\r\n&quot;
+    printf &quot;Last-Modified: $(date --rfc-2822)\r\n&quot;
+    printf &quot;\r\n&quot;
+}</code></pre>
+<p>Reloading twice, and the browser request will change to send an additional <code>If-Modified-Since</code> header.</p>
+<h2 id="etags">ETags</h2>
+<p>The functionality of ETags, designed to communicate caching of old files, can be used follow users around without the need of cookies. Let’s see if we can do this with our little server.</p>
+<p>The function generating the response headers is modified to extract any ETag supplied by the browser. If none exists, we generate a new one by hashing the number of nanoseconds passed since the beginning of the UNIX epoche. The parsed or newly generated etag is then sent back to the browser. We also add a few header to make sure the conents isn’t cached. As a result, we should be able to track a user through his or her browser cache.</p>
+<pre class="shell"><code>response_headers ()
+{
+    local etag
+    etag=$(echo &quot;${request_headers}&quot; | sed -ne &#39;s/^\(If-None-Match: &quot;\([a-f0-9]*\)&quot;.*\)/\2/gp&#39;)
+    printf &quot;HTTP/1.1 200 OK\r\n&quot;
+    printf &quot;Content-Type: text/plain\r\n&quot;
+    printf &quot;Last-Modified: $(date --rfc-2822)\r\n&quot;
+    printf &quot;ETag: \&quot;${etag:-$(date +%s%N | md5sum | cut -d&#39; &#39; -f1)}\&quot;\r\n&quot;
+    printf &quot;Expires: Tue, 01 Jan 2013 00:00:01 GMT\r\n&quot;
+    printf &quot;Cache-Control: max-age=0\r\n&quot;
+    printf &quot;Connection: keep-alive\r\n&quot;
+    printf &quot;\r\n&quot;
+}</code></pre>
+<p>We can test this by reloading our test page twice and… it works! We can reload as often as we want, the ETag header sent by the browser will not change unless we clear the browser’s cache. A stealthy kind of user tracking can be simulated with just a few lines of shell script.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Even though we used nothing but simple command line tools and shell scripting, we managed to build a simple server and to experiment with the ways in which stateless servers and stateful browseres can effect each other through <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> headers. Standard UNIX tools are very powerful by themselves; together with a tool like <code>netcat</code>, power and fun extend even into experiments with networking and default protocols.</p>
+  </div>
+</article>
+
+      </div>
+    </div>
+
+    <footer>
+      <div class="container"
+           vocab="http://purl.org/dc/terms/">
+        <div id="copyright-info">
+          <span class="inline-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</span>
+          <span property="title">ZeitKraut</span>,
+          <span class="copyright-notice">
+            Copyright © 2013–2018
+            <a href="/contact.html#content"
+               property="http://creativecommons.org/ns#attributionName"
+               rel="http://creativecommons.org/ns#attributionURL">Albert
+               Krewinkel</a>.
+          </span>
+        </div>
+        <div id="legal-info">
+          Text is available under the
+          <a rel="license"
+             href="http://creativecommons.org/licenses/by-sa/3.0/de/deed.en_US">
+            <abbr title="Creative Commons Attribution-ShareAlike 3.0 Germany">
+              CC BY‑SA 3.0 DE</abbr></a> license.
+        </div>
+        <div id="feed-and-code">
+          Read the <a href="/atom.xml">feed <span class="fa fa-rss"></span></a> or
+          grab the
+          <a href="https://github.com/tarleb/zeitkraut-blog"
+             >code <span class="fa fa-github"></span></a>!
+        </div>
+      </div>
+    </footer>
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+  </body>
+</html>

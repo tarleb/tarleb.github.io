@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+      vocab="http://schema.org/" typeof="Blog">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>zeitkraut – Protect the Reader’s Privacy!</title>
+    <link rel="canonical" href="https://zeitkraut.de/posts/2013-12-02-protect-the-readers-privacy.html" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/img/zeitlens-logo-default.svg" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/zeitlens.css" />
+    <link rel="author"     href="/contact.html#albertkrewinkel" />
+    <link property="image" href="/img/zeitlens-logo-default.svg" />
+    <link rel="apple-touch-icon" href="/img/zeitlens-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/zeitlens-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/zeitlens-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/zeitlens-icon-144x144.png" />
+    <link rel="alternate"  href="/atom.xml" title="ATOM"
+          type="application/atom+xml" />
+    <script type="text/javascript" async="async" src="/scripts/zeitlens.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="header">
+
+        <nav id="navbar" class="navbar navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-exl-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="fa fa-bars"></span>
+              </button>
+              <a href="/">
+                <div class="navbar-brand">
+                  <!-- ZeitKraut logo -->
+                  <div class="logo inline-logo" id="brand-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</div>
+                  zeitkraut
+                </div>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse navbar-exl-collapse">
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/archive.html">Archive</a></li>
+                <li><a href="/tags.html">Tags</a></li>
+                <li><a href="/colophon.html">Colophon</a></li>
+                <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div id="headerImageContainer">
+          <img id="headerImg" src="/img/header_400x129.jpg" class="img-responsive" alt="" />
+        </div>
+      </div>
+
+      <div id="content" class="container">
+        <article vocab="http://schema.org/" typeof="BlogPosting">
+  <h1 property="headline">Protect the Reader’s Privacy!</h1>
+
+  <div class="post-metadata">
+    <div class="post-date">
+      <time datetime="2013-12-02" property="datePublished">December  2, 2013</time>
+    </div>
+    <div class="post-tags">tagged with: <a href="/tags/privacy.html">privacy</a>, <a href="/tags/http.html">http</a></div>
+  </div>
+
+  <div property="articleBody">
+    <p>I was faced with potential privacy issues while integrating Dave Gandy’s <a href="http://fontawesome.io">Font Awesome</a> into the page. The font itself is not to blame. On the contrary, the it is great! The methods by which it can be used, however, can be very problematic and open a channel for potential user tracking. This is not unique to this font but a very general problem.</p>
+<p>The Font Awesome website <a href="http://fontawesome.io/get-started">lists multiple options</a> of how to integrate the font into a website, most of which are fairly simple. The first method is also praised as the “easiest”, yet I decided against it to protect the blog readers’ privacy. Here is why.</p>
+<h2 id="foreign-vs.local-content">Foreign vs. Local Content</h2>
+<p>Most projects aimed at websites and web development offer a very simple way of using the technology: Including very short snippets of code is enough to bring a wide range of new functionality to an otherwise plain site. The principle here is that a foreign server handles the content. The page merely instructs the browser to get that content and to mix it with what is received from the original site.</p>
+<p>As an example, this is the code which includes the popular <a href="http://jquery.com">jQuery</a> library into a page:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> src=</span><span class="st">&quot;//code.jquery.com/jquery-1.10.2.min.js&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">&lt;/script&gt;</span></a></code></pre></div>
+<p>This instructs the browser to send a request to <code>code.jquery.com</code> and to receive the library file from there.</p>
+<p>Contrast this with</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> async=</span><span class="st">&quot;true&quot;</span><span class="ot"> src=</span><span class="st">&quot;/scripts/jquery.min.js&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">&lt;/script&gt;</span></a></code></pre></div>
+<p>The latter HTML snippet causes no request to foreign servers but loads everything from the currently visited domain. The content must be put on the server, but that is hardly ever a problem with open source projects. This is also the setup I chose for Font Awesome and other libraries used on this site.</p>
+<h2 id="information-disclosure">Information Disclosure</h2>
+<p>The privacy problem arising from the former inclusion method is inherent to the way browsers communicate with servers. All browser requests are sent with the Hypertext Transfer Protocol, <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> for short. When an <abbr class="initialism" title="Hypertext Transfer Protocol">HTTP</abbr> conforming browser request goes out to a third-party server, that server learns about</p>
+<ul>
+<li>the address of the page which prompted the browser to initiate the request and</li>
+<li>the users IP address, operating system, browser version and other potentially identifying information.</li>
+</ul>
+<p>In other words, the third-party is informed about the pages which are visited and how frequently users view them. The details of how much the third party really learns about a visitor depend on a number of variables, including the interest of the third party in user browsing-patterns. Privacy friendly third-party servers can stop a browser from making repeated requests for the same resource, thereby preventing the browser from disclosing more than the address of the first visited page. However, one address is always disclosed, regardless of server configuration.</p>
+<p>It should be clear now that third-party website content poses a privacy risk to website visitors. Control over the disclosure of surfing habits and over another method for user-tracking is handed over to a third party. The website creator chooses in the name of all visitors which other pages they have to trust. The visitor has no choice in this.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<h2 id="responsibility-of-webmasters">Responsibility of Webmasters</h2>
+<p>Including foreign content on a page is very common on the web, yet it is rarely ever necessary. Website operators are given the trust and data of their users. They should act responsibly and handle requests confidentially. Most importantly, they should not hand over user data to others. Setting foreign website content aside is one of the basic measures a webmaster should take to protect their users’ privacy.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Some commercial websites are well aware of the problem: The social news site <a href="http://reddit.com">reddit</a> offers a privacy related option to <q><em>“load core <abbr  title="JavaScript">JS</abbr> libraries from reddit servers”</em></q>. It sets an example of how a website can give control in this matter back to the users. Unfortunately, the option became worthless when reddit decided to track its users with Google Analytics, eliminating all hopes for good privacy on that site. The JavaScript tracking code is loaded from Google’s servers regardless of whether the above option is set or not.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+  </div>
+</article>
+
+      </div>
+    </div>
+
+    <footer>
+      <div class="container"
+           vocab="http://purl.org/dc/terms/">
+        <div id="copyright-info">
+          <span class="inline-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</span>
+          <span property="title">ZeitKraut</span>,
+          <span class="copyright-notice">
+            Copyright © 2013–2018
+            <a href="/contact.html#content"
+               property="http://creativecommons.org/ns#attributionName"
+               rel="http://creativecommons.org/ns#attributionURL">Albert
+               Krewinkel</a>.
+          </span>
+        </div>
+        <div id="legal-info">
+          Text is available under the
+          <a rel="license"
+             href="http://creativecommons.org/licenses/by-sa/3.0/de/deed.en_US">
+            <abbr title="Creative Commons Attribution-ShareAlike 3.0 Germany">
+              CC BY‑SA 3.0 DE</abbr></a> license.
+        </div>
+        <div id="feed-and-code">
+          Read the <a href="/atom.xml">feed <span class="fa fa-rss"></span></a> or
+          grab the
+          <a href="https://github.com/tarleb/zeitkraut-blog"
+             >code <span class="fa fa-github"></span></a>!
+        </div>
+      </div>
+    </footer>
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+  </body>
+</html>

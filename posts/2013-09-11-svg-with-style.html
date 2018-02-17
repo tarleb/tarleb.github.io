@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+      vocab="http://schema.org/" typeof="Blog">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>zeitkraut – Re-Using SVG Graphics with Style</title>
+    <link rel="canonical" href="https://zeitkraut.de/posts/2013-09-11-svg-with-style.html" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/img/zeitlens-logo-default.svg" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/zeitlens.css" />
+    <link rel="author"     href="/contact.html#albertkrewinkel" />
+    <link property="image" href="/img/zeitlens-logo-default.svg" />
+    <link rel="apple-touch-icon" href="/img/zeitlens-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/zeitlens-icon-72x72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/zeitlens-icon-114x114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/zeitlens-icon-144x144.png" />
+    <link rel="alternate"  href="/atom.xml" title="ATOM"
+          type="application/atom+xml" />
+    <script type="text/javascript" async="async" src="/scripts/zeitlens.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <div id="header">
+
+        <nav id="navbar" class="navbar navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-exl-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="fa fa-bars"></span>
+              </button>
+              <a href="/">
+                <div class="navbar-brand">
+                  <!-- ZeitKraut logo -->
+                  <div class="logo inline-logo" id="brand-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</div>
+                  zeitkraut
+                </div>
+              </a>
+            </div>
+            <div class="collapse navbar-collapse navbar-exl-collapse">
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/archive.html">Archive</a></li>
+                <li><a href="/tags.html">Tags</a></li>
+                <li><a href="/colophon.html">Colophon</a></li>
+                <li><a href="/privacy-policy.html">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <div id="headerImageContainer">
+          <img id="headerImg" src="/img/header_400x129.jpg" class="img-responsive" alt="" />
+        </div>
+      </div>
+
+      <div id="content" class="container">
+        <article vocab="http://schema.org/" typeof="BlogPosting">
+  <h1 property="headline">Re-Using SVG Graphics with Style</h1>
+
+  <div class="post-metadata">
+    <div class="post-date">
+      <time datetime="2013-09-11" property="datePublished">September 11, 2013</time>
+    </div>
+    <div class="post-tags">tagged with: <a href="/tags/svg.html">svg</a>, <a href="/tags/css.html">css</a>, <a href="/tags/html.html">html</a>, <a href="/tags/browsers.html">browsers</a></div>
+  </div>
+
+  <div property="articleBody">
+    <p>I like experimenting with new technology. <a href="http://www.w3c.org/Graphics/SVG/"><abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr></a> itself doesn’t exactly qualify as “new” anymore, its first release dates back to the final months of the dot-com bubble. However, the inclusion of <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr> in <abbr class="initialism" title="Hypertext Markup Language, fifth revision">HTML5</abbr> and the ever increasing browser support gives it a feeling of “oooh, shiny!”.</p>
+<p>The ZeitLens logo is simple and based on geometric shapes, so it was a very obvious decision to hand-code it in <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr>. Inclusion of the logo into the page is straightforward and possible with a couple of options. Things started getting interesting when I decided to <a href="http://www.w3c.org/TR/SVG11/styling.html#StylingWithCSS">style the logo’s appearance with <abbr class="initialism" title="Cascading Style Sheets">CSS</abbr></a> and to include the same logo <em>twice</em>. Simple, right? Here comes the fun.</p>
+<h2 id="imagine-beautiful-svg-images">Imagine beautiful SVG images</h2>
+<p>The logo is an image, so using an <code>img</code> tag to include it into the page is the most reasonable approach, at least from a semantic point-of-view. This works nicely in all recent browsers, but <em>only</em> if both code and styling information are put into a single file. Now that last part is really bad: The whole point of <abbr class="initialism" title="Cascading Style Sheets">CSS</abbr> is to separate the presentation from the data. Including <abbr class="initialism" title="Cascading Style Sheets">CSS</abbr> into the <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr>-image file goes against modularity principles and limits re-usability.</p>
+<p>Assume we would like to style the logo matching the documents text and background colors. Following the <abbr class="initialism" title="Don't Repeat Yourself">DRY</abbr> principle, these colors should be defined exactly once, most likely in the central stylesheet. This won’t work for <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr> graphics included through <code>img</code> elements. We would have to duplicate the color information in the logo file. Should we decide to change our main style, we’d also have to visit each graphics file changing the colors there. Using a technology like <a href="http://sass-lang.com"><abbr  title="Syntactically Awesome StyleSheets">Sass</abbr></a> is out of the question, too. What a pain.</p>
+<h2 id="inline-svg">Inline SVG</h2>
+<p>Let’s go the other way and directly include inline <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr> into the page. We could reference and hence re-use the image on the same page via <code>xlink</code> attributes and <code>use</code> elements. Styling information could be included into the <abbr class="initialism" title="Hypertext Markup Language">HTML</abbr> either as inline <abbr class="initialism" title="Cascading Style Sheets">CSS</abbr> or with a <code>link</code> element pointing to a stylesheet. In terms of modularity, this is a great improvement over the previous method.</p>
+<p>Too bad it <a href="https://bugs.webkit.org/?show_bug.cgi?id=111927">doesn’t work in Chrome</a>. (Strangely enough, it <em>does</em> work with JavaScript disabled.) The styles are not applied to the cloned graphics. We could try to style every clone individually, but that even <em>must not</em> work. The <a href="http://www.w3.org/TR/SVG/struct.html#UseElement">official <abbr  title="World Wide Web Consortium">W3C</abbr> recommendation</a> states</p>
+<pre><code><abbr class="initialism" title="Cascading Style Sheets, second revision">CSS2</abbr> selectors cannot be applied to the (conceptually) cloned DOM tree
+because its contents are not part of the formal document structure.</code></pre>
+<p>Crap. We can’t style the cloned graphics but have to duplicate the complete inline <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr> in order to make it accessible to <abbr class="initialism" title="Cascading Style Sheets">CSS</abbr> selectors. This is no better than using <code>img</code> elements.</p>
+<h2 id="objective-svg"><code>object</code>ive <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr></h2>
+<p>There is but one option left: <code>object</code> elements. The stylesheet can be specified in the <abbr class="initialism" title="eXtensible Markup Language">XML</abbr> of the graphics and it is applied correctly. Modularity is ensured; content and styling are separated nicely.</p>
+<p>Despite <code>object</code> elements working well in general, not all is good. The problem lies with Firefox 17 and <a href="http://noscript.net/">NoScript</a>. At least for me, a browser of this (or earlier) version will not display an <code>object</code> when JavaScript is disabled. The placeholder looks really ugly, too. The blog should be fully functional in a one year old browser, even with an intrusive plugin like NoScript. A page with major parts of its graphical identity missing can hardly be described as <em>fully functional</em>. Therefor <code>object</code> tags are no silver bullet, either.</p>
+<h2 id="this-blogs-method">This Blogs Method</h2>
+<p>While basic <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr> support in browsers is good in general, they still lack full support for the specs. It is possible to make good use of <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr>, but (<a href="http://caniuse.com">as with most newish internet standards</a>) one has to be careful about what does and doesn’t work. As for this blog, you can have a look at the source to check which ugly hack I resolved to for this blog. At the time of writing, I hard coded some sensible color values into the <abbr class="initialism" title="Scalable Vector Graphics">SVG</abbr>. Only stylistic fine-tuning is done in <abbr class="initialism" title="Cascading Style Sheets">CSS</abbr>. I’m not happy about it, but that’s the way it is for now. I may change it once I find the time.</p>
+<p>At least the logo came out okay.</p>
+  </div>
+</article>
+
+      </div>
+    </div>
+
+    <footer>
+      <div class="container"
+           vocab="http://purl.org/dc/terms/">
+        <div id="copyright-info">
+          <span class="inline-logo"><svg viewBox="0 0 212 212"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    
+  </defs>
+  <rect class="logo-background"
+        width="100%"
+        height="100%" />
+  <g transform="translate(100 100)">
+    <!-- hours -->
+    <g class="logo-hour-dial" transform="rotate(310)">
+      <rect class="dial"
+            x="-11"
+            y="-50"
+            width="22"
+            height="50"
+            ry="16px"/>
+    </g>
+    <!-- minutes -->
+    <g class="logo-minute-dial" transform="rotate(60)">
+      <rect class="dial"
+            x="-10"
+            y="-70"
+            width="20"
+            height="70"
+            ry="14px"/>
+    </g>
+    <!-- seconds -->
+    <g class="logo-second-dial" transform="rotate(200)">
+      <circle class="centerpiece"
+              cx="0"
+              cy="0"
+              r="2"/>
+      <rect class="dial"
+            x="-2"
+            y="-73"
+            width="4"
+            height="73"
+            ry="5px"/>
+    </g>
+    <!-- clock center -->
+    <circle class="logo-centerpiece"
+            cx="0"
+            cy="0"
+            r="15"/>
+  </g>
+  <g class="logo-lupe"
+     transform="translate(100 100) rotate(45)">
+    <!-- lens -->
+    <circle class="logo-lens"
+            cx="0"
+            cy="0"
+            r="86"
+            fill="none"
+            stroke-width="26px" />
+    <!-- handle -->
+    <rect class="logo-handle"
+          x="90"
+          y="-30px"
+          width="40"
+          height="60px"
+          rx="5px"/>
+  </g>
+  
+</svg>
+</span>
+          <span property="title">ZeitKraut</span>,
+          <span class="copyright-notice">
+            Copyright © 2013–2018
+            <a href="/contact.html#content"
+               property="http://creativecommons.org/ns#attributionName"
+               rel="http://creativecommons.org/ns#attributionURL">Albert
+               Krewinkel</a>.
+          </span>
+        </div>
+        <div id="legal-info">
+          Text is available under the
+          <a rel="license"
+             href="http://creativecommons.org/licenses/by-sa/3.0/de/deed.en_US">
+            <abbr title="Creative Commons Attribution-ShareAlike 3.0 Germany">
+              CC BY‑SA 3.0 DE</abbr></a> license.
+        </div>
+        <div id="feed-and-code">
+          Read the <a href="/atom.xml">feed <span class="fa fa-rss"></span></a> or
+          grab the
+          <a href="https://github.com/tarleb/zeitkraut-blog"
+             >code <span class="fa fa-github"></span></a>!
+        </div>
+      </div>
+    </footer>
+    <script type="text/javascript" src="/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+  </body>
+</html>
