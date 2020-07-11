@@ -8,8 +8,141 @@
         <name>Albert Krewinkel</name>
         <email>albert+feed@zeitlens.com</email>
     </author>
-    <updated>2017-12-23T00:00:00Z</updated>
+    <updated>2020-07-11T00:00:00Z</updated>
     <entry>
+    <title>PDF Version of the Lua Manual</title>
+    <link href="https://zeitkraut.de/posts/2020-07-11-pdf-of-the-lua-manual.html" />
+    <id>https://zeitkraut.de/posts/2020-07-11-pdf-of-the-lua-manual.html</id>
+    <published>2020-07-11T00:00:00Z</published>
+    <updated>2020-07-11T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<article vocab="http://schema.org/" typeof="BlogPosting">
+  <h1 property="headline">PDF Version of the Lua Manual</h1>
+
+  <div class="post-metadata">
+    <div class="post-date">
+      <time datetime="2020-07-11" property="datePublished">July 11, 2020</time>
+    </div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;pandoc&#39;." href="/tags/pandoc.html">pandoc</a>, <a title="All pages tagged &#39;lua&#39;." href="/tags/lua.html">lua</a>, <a title="All pages tagged &#39;pdf&#39;." href="/tags/pdf.html">pdf</a></div>
+  </div>
+
+  <div property="articleBody">
+    <p>A question came up on the Lua mailing list, asking whether there was a PDF version of the <a href="https://lua.org/manual/5.4/manual.html">Lua manual</a>. This is, of course, the home domain of pandoc, and I got nerd-sniped into producing a PDF (and ePUB) version of the manual.</p>
+<p>This is a good opportunity to showcase some pandoc features. The post describes the process of going from an HTML web page to a PDF file via LaTeX and pandoc. We will see how to</p>
+<ol type="1">
+<li>quickly convert documents with pandoc;</li>
+<li>use Lua filters to improve the result by modifying the document; and</li>
+<li>fine-tune the output by setting appropriate pandoc options.</li>
+</ol>
+<h2 id="invoking-pandoc">Invoking pandoc</h2>
+<p>The first step is to call pandoc on the Lua manual website. Even when keeping everything bare-bones, the result is already decent:</p>
+<pre><code>pandoc --pdf-engine=xelatex --output=lua-manual.pdf \
+    &quot;https://lua.org/manual/5.4/manual.html&quot;
+    </code></pre>
+<p>Produces</p>
+<figure>
+<img src="/img/lua-refman-naive.png" alt="" /><figcaption>First page of unoptimized PDF</figcaption>
+</figure>
+<p>This requires a somewhat recent version of pandoc as well as XeLaTeX to be installed. It is possible to forgo the trouble of installing the requirements by using the <em>pandoc/latex</em> Docker image:</p>
+<pre><code>docker run --rm -v &quot;$PWD&quot;:/data -u $(id -u):$(id -g) pandoc/latex:2.9.2.1 \
+    --pdf-engine=xelatex --output=lua-manual.pdf \
+    &quot;https://lua.org/manual/5.4/manual.html&quot;</code></pre>
+<h2 id="replacing-characters">Replacing characters</h2>
+<p>The above commands will produce warnings about characters which are unavailable in the default fonts. We don’t want characters to go missing, of course, so let’s fix that first. The warnings are:</p>
+<pre><code>[WARNING] Missing character: There is no ≤ (U+2264) in font [lmmono10-regular]:!
+[WARNING] Missing character: There is no ≤ (U+2264) in font [lmmono10-regular]:!
+[WARNING] Missing character: There is no π (U+03C0) in font [lmroman10-italic]:mapping=tex-text;!</code></pre>
+<p>Searching the page for <code>≤</code> shows that it is used in inline code, while <code>π</code> occurs as emphasized character in the description of <code>math.pi</code>. We could, of course, search for a font which has the appropriate glyphs and instruct pandoc/LaTeX to use it. But we’ll go a different route.</p>
+<p>A good way to improve the result of a converstion is to use a pandoc <a href="https://pandoc.org/lua-filters.html">Lua filter</a>. We create a file called <code>beautify-manual.lua</code> and pass it to pandoc via the <code>--lua-filter=beautify-manual.lua</code> command line option.</p>
+<p>Handling <code>≤</code> is straight forward, we just replace the char with the slightly uglier looking ASCII sequence <code>&lt;=</code> in all code elements.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">function</span> Code <span class="op">(</span>c<span class="op">)</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>  c<span class="op">.</span>text <span class="op">=</span> c<span class="op">.</span>text<span class="op">:</span><span class="fu">gsub</span><span class="op">(</span><span class="st">&#39;≤&#39;</span><span class="op">,</span> <span class="st">&#39;&lt;=&#39;</span><span class="op">)</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="cf">return</span> c</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="cf">end</span></span></code></pre></div>
+<p>While there is no italics version <code>π</code> in the default font, there <em>is</em> such a glyph in the default math font. Pandoc’s internal representation for <em>π</em> is <code>Emph [Str "π"]</code>, which we replace with a math element holding the same content.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">function</span> Emph <span class="op">(</span>e<span class="op">)</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="kw">local</span> s <span class="op">=</span> e<span class="op">.</span>content<span class="op">[</span><span class="dv">1</span><span class="op">]</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="cf">if</span> <span class="op">#</span>e<span class="op">.</span>content <span class="op">==</span> <span class="dv">1</span> <span class="kw">and</span> s<span class="op">.</span>tag <span class="op">==</span> <span class="st">&#39;Str&#39;</span> <span class="kw">and</span> s<span class="op">.</span>text <span class="op">==</span> <span class="st">&#39;π&#39;</span> <span class="cf">then</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="cf">return</span> pandoc<span class="op">.</span>Math<span class="op">(</span><span class="st">&#39;InlineMath&#39;</span><span class="op">,</span> <span class="st">&#39;π&#39;</span><span class="op">)</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="cf">end</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a><span class="cf">end</span></span></code></pre></div>
+<p>The document now compiles without warnings, and all characters are properly included.</p>
+<h2 id="add-table-of-contents">Add Table of Contents</h2>
+<p>The Lua manual is long, often used as a reference, and, in its HTML version, comes with a table of contents on a separate page. The PDF, for it to be useful as a reference, should have a table of contents as well. Pandoc can be told to generate a table of contents by adding the <code>--toc</code> command line flag. The toc depth is controlled via <code>--toc-depth</code>; <code>2</code> is a good setting here. However, in this case, the result is neither pleasing nor informative:</p>
+<figure>
+<img src="/img/bad-toc.png" alt="" /><figcaption>Bad looking table of contents</figcaption>
+</figure>
+<p>Something is terribly wrong. By inspecting the parsed document by running <code>pandoc --to=native …</code>, we see that all <em>Header</em>s contain a <em>Span</em>. That span holds the actual contents. Apparently LaTeX does not like this and omits the content of the span when generating the toc.</p>
+<p>The span also has the id used by links to the header. Numbered sections start with the section number, which we’d rather produce via pandoc.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">function</span> Header <span class="op">(</span>h<span class="op">)</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="co">-- Unnumbered sections have the main contents as the first element.</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="co">-- Numbered sections start with the number and an em-dash, so</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="co">-- the Span is the fifth element (Lua multipass).</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="kw">local</span> span</span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="cf">if</span> h<span class="op">.</span>content<span class="op">[</span><span class="dv">1</span><span class="op">].</span>tag <span class="op">==</span> <span class="st">&#39;Str&#39;</span> <span class="kw">and</span> h<span class="op">.</span>content<span class="op">[</span><span class="dv">1</span><span class="op">].</span>text<span class="op">:</span><span class="fu">match</span> <span class="st">&#39;[%d%.]+&#39;</span> <span class="cf">then</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>    span <span class="op">=</span> h<span class="op">.</span>content<span class="op">[</span><span class="dv">5</span><span class="op">]</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>  <span class="cf">else</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>    span <span class="op">=</span> h<span class="op">.</span>content<span class="op">[</span><span class="dv">1</span><span class="op">]</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a>    h<span class="op">.</span>classes<span class="op">:</span><span class="fu">insert</span><span class="op">(</span><span class="st">&#39;unnumbered&#39;</span><span class="op">)</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>  <span class="cf">end</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a></span>
+<span id="cb6-13"><a href="#cb6-13"></a>  h<span class="op">.</span>identifier <span class="op">=</span> span<span class="op">.</span>identifier</span>
+<span id="cb6-14"><a href="#cb6-14"></a>  h<span class="op">.</span>content <span class="op">=</span> span<span class="op">.</span>content</span>
+<span id="cb6-15"><a href="#cb6-15"></a></span>
+<span id="cb6-16"><a href="#cb6-16"></a>  <span class="cf">return</span> h</span>
+<span id="cb6-17"><a href="#cb6-17"></a><span class="cf">end</span></span></code></pre></div>
+<p>The filter also removes the section numbering. We add it back by passing <code>--number-sections</code> to pandoc.</p>
+<figure>
+<img src="/img/less-bad-toc.png" alt="" /><figcaption>less-bad table of contents</figcaption>
+</figure>
+<p>Not bad.</p>
+<h2 id="improve-title-and-metadata">Improve title and metadata</h2>
+<p>The PDF is already quite usable, let’s prettify it a bit more: It would be important to properly list the authors in the title and metadata, remove the unnecessary first header, and maybe add the Lua logo to the title. All this is easiest when acting on the full document.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">function</span> Pandoc <span class="op">(</span>doc<span class="op">)</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="co">-- comma separated authors</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="kw">local</span> authors <span class="op">=</span> doc<span class="op">.</span>blocks<span class="op">[</span><span class="dv">2</span><span class="op">]</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  authors<span class="op">.</span>content<span class="op">:</span><span class="fu">remove</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span>  <span class="co">-- remove &#39;by&#39;</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  doc<span class="op">.</span>meta<span class="op">.</span>author <span class="op">=</span> pandoc<span class="op">.</span>List<span class="op">()</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="cf">for</span> author <span class="kw">in</span> pandoc<span class="op">.</span>utils<span class="op">.</span>stringify<span class="op">(</span>authors<span class="op">):</span><span class="fu">gmatch</span> <span class="st">&#39;[^,]+&#39;</span> <span class="cf">do</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>    doc<span class="op">.</span>meta<span class="op">.</span>author<span class="op">:</span><span class="fu">insert</span><span class="op">(</span>author<span class="op">)</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="cf">end</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a>  <span class="co">-- Remove unnecessary blocks</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>  doc<span class="op">.</span>blocks<span class="op">:</span><span class="fu">remove</span><span class="op">(</span><span class="dv">4</span><span class="op">)</span> <span class="co">-- menubar</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>  doc<span class="op">.</span>blocks<span class="op">:</span><span class="fu">remove</span><span class="op">(</span><span class="dv">2</span><span class="op">)</span> <span class="co">-- authors paragraph</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>  doc<span class="op">.</span>blocks<span class="op">:</span><span class="fu">remove</span><span class="op">(</span><span class="dv">1</span><span class="op">)</span> <span class="co">-- title header</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a></span>
+<span id="cb7-15"><a href="#cb7-15"></a>  <span class="co">-- add subtitle image</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a>  doc<span class="op">.</span>meta<span class="op">.</span>subtitle <span class="op">=</span> pandoc<span class="op">.</span>MetaInlines<span class="op">{</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>    pandoc<span class="op">.</span>RawInline<span class="op">(</span><span class="st">&#39;latex&#39;</span><span class="op">,</span> <span class="st">&#39;</span><span class="sc">\\</span><span class="st">vspace{1em}&#39;</span><span class="op">),</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>    pandoc<span class="op">.</span>Image<span class="op">(</span><span class="st">&quot;Lua logo&quot;</span><span class="op">,</span> <span class="co">-- &quot;https://www.lua.org/images/lua-logo.gif&quot;)</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>  <span class="op">}</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>  <span class="cf">return</span> doc</span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="cf">end</span></span></code></pre></div>
+<h2 id="final-touch">Final touch</h2>
+<p>Finally, we may want the PDF to add a little more visible structure, e.g., starting top-level sections on their own page.</p>
+<p>The command used by pandoc to create the top level headings can be controlled with the <code>--top-level-division</code> option. Setting that option to <code>chapter</code> ensures that each major section starts on a new page. However, the default document class used by LaTeX doesn’t allow chapters, so a different class has to be set with <code>--variable documentclass=report</code>.</p>
+<h2 id="summary">Summary</h2>
+<p>For completeness, here is the full pandoc command used to generate the PDF:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="ex">pandoc</span> \</span>
+<span id="cb8-2"><a href="#cb8-2"></a>  --toc \</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  --toc-depth=2 \</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  --metadata=documentclass=report \</span>
+<span id="cb8-5"><a href="#cb8-5"></a>  --pdf-engine=xelatex \</span>
+<span id="cb8-6"><a href="#cb8-6"></a>  --lua-filter=lua-manual-cleanup.lua \</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  --number-sections \</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  --top-level-division=chapter \</span>
+<span id="cb8-9"><a href="#cb8-9"></a>  --output=lua-5.4-manual.pdf \</span>
+<span id="cb8-10"><a href="#cb8-10"></a>  <span class="st">&quot;https://lua.org/manual/5.4/manual.html&quot;</span></span></code></pre></div>
+<p>One of the big advantages of pandoc is that it offers a lot of freedom. Since we already cleaned the content up, we can now also create other formats, like an ebook, just by changing the name of the output file. The final results are available below:</p>
+<ul>
+<li><a href="/docs/lua-5.4-manual.pdf">Lua 5.4 manual (PDF)</a></li>
+<li><a href="/docs/lua-5.4-manual.epub">Lua 5.4 manual (EPUB)</a></li>
+</ul>
+  </div>
+</article>
+]]></summary>
+</entry>
+<entry>
     <title>Extending pandoc with Lua</title>
     <link href="https://zeitkraut.de/posts/2017-12-23-extending-pandoc-with-lua.html" />
     <id>https://zeitkraut.de/posts/2017-12-23-extending-pandoc-with-lua.html</id>
@@ -22,7 +155,7 @@
     <div class="post-date">
       <time datetime="2017-12-23" property="datePublished">December 23, 2017</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/pandoc.html">pandoc</a>, <a href="/tags/lua.html">lua</a>, <a href="/tags/pandoc-filter.html">pandoc-filter</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;pandoc&#39;." href="/tags/pandoc.html">pandoc</a>, <a title="All pages tagged &#39;lua&#39;." href="/tags/lua.html">lua</a>, <a title="All pages tagged &#39;pandoc-filter&#39;." href="/tags/pandoc-filter.html">pandoc-filter</a></div>
   </div>
 
   <div property="articleBody">
@@ -30,14 +163,14 @@
 <h2 id="the-universal-document-converter">The universal document converter</h2>
 <p><a href="https://pandoc.org/">Pandoc</a> – written and maintained by <a href="https://johnmacfarlane.net">John MacFarlane</a> – is an relatively old project. It has grown considerably since the first version was published in 2006: at the time of writing, pandoc can read 27 different document formats and dialects, and can write 49 formats. Besides serving as a one-off document conversions tool, pandoc also frequently features as the central part of publishing pipelines. For example, Pandoc is used in <a href="https://github.com/mfenner/jekyll-pandoc">static</a> <a href="https://jaspervdj.be/hakyll/">site generators</a> and is frequently used <a href="https://programminghistorian.org/lessons/sustainable-authorship-in-plain-text-using-pandoc-and-markdown">by academic writers</a>, due also to its excellent support for citations.</p>
 <p>As a brief example, consider the following commands which transform Markdown input into docx, HTML, or PDF:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># command to convert a markdown file to docx</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">pandoc</span> input-file.md --output=output-file.docx</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># convert to HTML</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="ex">pandoc</span> input-file.md --standalone --output=output-file.html</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co"># convert to PDF (via LaTeX)</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="ex">pandoc</span> input-file.md --output=output-file.pdf</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># command to convert a markdown file to docx</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">pandoc</span> input-file.md --output=output-file.docx</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># convert to HTML</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="ex">pandoc</span> input-file.md --standalone --output=output-file.html</span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># convert to PDF (via LaTeX)</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="ex">pandoc</span> input-file.md --output=output-file.pdf</span></code></pre></div>
 <p>Many conversion tasks need to alter the default behavior or require special conversion features. This highlights the importance of good customization support for a conversion tool, one of the areas in which Lua shines.</p>
 <p>Pandoc is unusual for a Lua-extendable program, in that it is written in Haskell. Using Haskell is very productive, but is less suitable as an extension language: its concepts are often alien to users of other languages, and shipping a full Haskell interpreter with pandoc would result in considerable bloat. Lua is an excellent choice here, as it is lightweight, simple, and beautiful. It should be noted, however, that <a href="https://github.com/hslua">bridging Haskell and Lua</a> is its own can of worms and worth a separate blog post.</p>
 <h2 id="pandocs-document-ast">Pandoc’s document AST</h2>
@@ -53,9 +186,9 @@
 <p>Pandoc’s Lua features revolve around modifying or converting these elements. The oldest use of Lua in pandoc enables the conversion of AST elements into strings as to output any document format.</p>
 <h2 id="custom-writers">Custom writers</h2>
 <p>Users can define custom writers in Lua to render any document format. Each of the aforementioned AST elements is transformed to a string by calling a Lua function of the same name as the element. E.g., this example demonstrates how emphasized text can be rendered as HTML:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode lua"><code class="sourceCode lua"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">function</span> Emph<span class="ot">(</span>content_string<span class="ot">)</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw">return</span> <span class="st">&#39;&lt;em&gt;&#39;</span> <span class="ot">..</span> content_string <span class="ot">..</span> <span class="st">&#39;&lt;/em&gt;&#39;</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">end</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">function</span> Emph<span class="op">(</span>content_string<span class="op">)</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="cf">return</span> <span class="st">&#39;&lt;em&gt;&#39;</span> <span class="op">..</span> content_string <span class="op">..</span> <span class="st">&#39;&lt;/em&gt;&#39;</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="cf">end</span></span></code></pre></div>
 <p>A full custom writer is defined by specifying functions for all document AST elements. Example writers using this method include <a href="https://github.com/lilydjwg/2bbcode">2bbcode</a> by <a href="https://github.com/lilydjwg">@lilydjwg (依 云)</a>, as well as pandoc’s <code>sample.lua</code>. The latter is a well documented starting point for authors of new custom writers. The file can be produced by calling <code>pandoc --print-default-data-file=sample.lua</code>.</p>
 <p>The <a href="https://pandoc-scholar.github.io/">pandoc-scholar</a> project serves as an example for the power offered by custom writers. It is a publishing tool intended to <a href="https://doi.org/10.7717/peerj-cs.112">help authors of scholarly articles</a> and was created with custom Lua writers. The tool leans on the custom writers feature in ways that writers were not intended to be used, which resulted in the development of lua filters.</p>
 <h2 id="filters">Filters</h2>
@@ -67,29 +200,29 @@
 <p>The <a href="https://pandoc.org/lua-filters.html">Lua filter</a> system added in pandoc 2.0 not only solves the portability issue of JSON filters, but also offers better performance and more functionality. Document elements can be selectively serialized to Lua tables, modified using the full power of Lua, and will then be transferred back, thus replacing the previous values.</p>
 <p>Lua filters operate by calling filter functions on each element of the specified name. I.e., if a Lua filter contains a function with the same name as an AST element, then this function is called for all elements of the respective type. The serialized element is passed as input to the filter function, and the function’s return value is deserialized and used to replace the input element. This method is as simple as it is flexible, and fits well with the concept of immutability which is prevalent in Haskell programs: pandoc ignores modifications to the serialized object itself, it will just use the filter function’s return value.</p>
 <p>The following example filter transforms all text set in small caps into emphasized text:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode lua"><code class="sourceCode lua"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">function</span> SmallCaps <span class="ot">(</span>element<span class="ot">)</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">  <span class="kw">return</span> pandoc<span class="ot">.</span>Emph<span class="ot">(</span>element<span class="ot">.</span>content<span class="ot">)</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">end</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">function</span> SmallCaps <span class="op">(</span>element<span class="op">)</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="cf">return</span> pandoc<span class="op">.</span>Emph<span class="op">(</span>element<span class="op">.</span>content<span class="op">)</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="cf">end</span></span></code></pre></div>
 <p>The element constructor functions in module pandoc, like <code>pandoc.Emph</code> in the above example, are also the central step when transforming elements from their pandoc-internal representation to Lua values. This ensures consistency in the way element values are produced, whether during serialization or through a constructor call in the filter script. The current implementation uses only strings, tables, and some metatables when constructing element values, with the goal of marking these values easy and flexible to use.</p>
 <h2 id="lua-filter-example-macro-expander">Lua filter example: macro expander</h2>
 <p>Below is the code for a simple macro expander using pandoc’s Lua filter functionality. The expander replaces all macro occurrences in the given document. Macro definitions are hard-coded into the filter, but could as well be read from an external file.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode lua"><code class="sourceCode lua"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="do">-- file: macro-expander.lua</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="do">-- Macro substitutions: contains macro identifier as</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="do">-- keys and the expanded inlines as values.</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw">local</span> macro_substs <span class="ot">=</span> <span class="ot">{</span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="ot">[</span><span class="st">&#39;{{hello}}&#39;</span><span class="ot">]</span> <span class="ot">=</span> pandoc<span class="ot">.</span>Emph<span class="ot">{</span>pandoc<span class="ot">.</span>Str <span class="st">&quot;Hello, World!&quot;</span><span class="ot">}</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="ot">}</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="do">-- Replace string with macro expansion, if any.</span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="kw">function</span> Str <span class="ot">(</span>s<span class="ot">)</span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">  <span class="kw">return</span> macro_substs<span class="ot">[</span>s<span class="ot">.</span>text<span class="ot">]</span> <span class="kw">or</span> s</a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="kw">end</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">-- file: macro-expander.lua</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co">-- Macro substitutions: contains macro identifier as</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co">-- keys and the expanded inlines as values.</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="kw">local</span> macro_substs <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="op">[</span><span class="st">&#39;{{hello}}&#39;</span><span class="op">]</span> <span class="op">=</span> pandoc<span class="op">.</span>Emph<span class="op">{</span>pandoc<span class="op">.</span>Str <span class="st">&quot;Hello, World!&quot;</span><span class="op">}</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="op">}</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co">-- Replace string with macro expansion, if any.</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="kw">function</span> Str <span class="op">(</span>s<span class="op">)</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>  <span class="cf">return</span> macro_substs<span class="op">[</span>s<span class="op">.</span>text<span class="op">]</span> <span class="kw">or</span> s</span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="cf">end</span></span></code></pre></div>
 <p>The heart of the macro expander is the function <code>Str</code>. It is called on all simple strings in the document. The return value of this function is then read back into pandoc, replacing the original <code>Str</code> value.</p>
 <p>Assume a Markdown file <code>greeting.md</code>:</p>
 <pre><code>Greeting: {{hello}}</code></pre>
 <p>We can apply the macro expander by calling</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">pandoc</span> --lua-filter macro-expander.lua greeting.md</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="ex">pandoc</span> --lua-filter macro-expander.lua greeting.md</span></code></pre></div>
 <p>resulting in the expected expansion:</p>
 <blockquote>
 <p>
@@ -97,7 +230,7 @@ Greeting: <em>Hello, World!</em>
 </p>
 </blockquote>
 <p>The function <code>Str</code> could be shortened further by dropping the trailing <code>or s</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode lua"><code class="sourceCode lua"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">function</span> Str <span class="ot">(</span>s<span class="ot">)</span> <span class="kw">return</span> macro_substs<span class="ot">[</span>s<span class="ot">.</span>text<span class="ot">]</span> <span class="kw">end</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode lua"><code class="sourceCode lua"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">function</span> Str <span class="op">(</span>s<span class="op">)</span> <span class="cf">return</span> macro_substs<span class="op">[</span>s<span class="op">.</span>text<span class="op">]</span> <span class="cf">end</span></span></code></pre></div>
 <p>This is a convenience feature of pandoc filters: if the function returns no value (or <code>nil</code>), the original value is kept unchanged. This makes filter functions easier to write and speeds up filtering, as unchanged elements don’t need to be deserialized again.</p>
 <h2 id="whats-good-and-whats-next">What’s good, and what’s next</h2>
 <p>Using pandoc with Lua is a fast, flexible, and platform independent way of augmenting pandoc with additional functionality. For me personally, having the full power of Lua at ones finger tips proved to be a lot of fun, while opening unexpected document processing possibilities.</p>
@@ -123,7 +256,7 @@ Greeting: <em>Hello, World!</em>
     <div class="post-date">
       <time datetime="2014-11-22" property="datePublished">November 22, 2014</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/talk.html">talk</a>, <a href="/tags/shell.html">shell</a>, <a href="/tags/command-line.html">command-line</a>, <a href="/tags/metanook.html">metanook</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;talk&#39;." href="/tags/talk.html">talk</a>, <a title="All pages tagged &#39;shell&#39;." href="/tags/shell.html">shell</a>, <a title="All pages tagged &#39;command-line&#39;." href="/tags/command-line.html">command-line</a>, <a title="All pages tagged &#39;metanook&#39;." href="/tags/metanook.html">metanook</a></div>
   </div>
 
   <div property="articleBody">
@@ -147,7 +280,7 @@ Greeting: <em>Hello, World!</em>
     <div class="post-date">
       <time datetime="2014-08-01" property="datePublished">August  1, 2014</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/security.html">security</a>, <a href="/tags/ipv6.html">ipv6</a>, <a href="/tags/server.html">server</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;security&#39;." href="/tags/security.html">security</a>, <a title="All pages tagged &#39;ipv6&#39;." href="/tags/ipv6.html">ipv6</a>, <a title="All pages tagged &#39;server&#39;." href="/tags/server.html">server</a></div>
   </div>
 
   <div property="articleBody">
@@ -213,7 +346,7 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
     <div class="post-date">
       <time datetime="2014-07-21" property="datePublished">July 21, 2014</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/browsers.html">browsers</a>, <a href="/tags/privacy.html">privacy</a>, <a href="/tags/security.html">security</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;browsers&#39;." href="/tags/browsers.html">browsers</a>, <a title="All pages tagged &#39;privacy&#39;." href="/tags/privacy.html">privacy</a>, <a title="All pages tagged &#39;security&#39;." href="/tags/security.html">security</a></div>
   </div>
 
   <div property="articleBody">
@@ -228,7 +361,7 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
 <h2 id="plugging-the-hole">Plugging the hole</h2>
 <p>Alternative methods like <a href="https://en.wikipedia.org/wiki/OCSP%20Stapling">OCSP stapling</a> and <a href="https://en.wikipedia.org/wiki/CRL">CRL</a> exist and don’t suffer from those problems, so there is no need to keep %OCSP activated in the browser. Chrome has it disabled by default; you can disable it in Firefox by following these brief instructions:</p>
 <ul>
-<li>Open a new tab in Firefox and visit the URL <a href="about:config" class="uri">about:config</a>.</li>
+<li>Open a new tab in Firefox and visit the URL <a href="about:config">about:config</a>.</li>
 <li>Click the <em>I’ll be careful, I promise</em> button.</li>
 <li>Enter <code>OCSP</code> into the search/filter field.</li>
 <li>Double click on <code>security.OCSP.enabled</code> and set its value to <code>0</code>.</li>
@@ -251,68 +384,68 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
     <div class="post-date">
       <time datetime="2014-06-29" property="datePublished">June 29, 2014</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/zsh.html">zsh</a>, <a href="/tags/vi.html">vi</a>, <a href="/tags/prompt.html">prompt</a>, <a href="/tags/key%20bindings.html">key bindings</a>, <a href="/tags/customization.html">customization</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;zsh&#39;." href="/tags/zsh.html">zsh</a>, <a title="All pages tagged &#39;vi&#39;." href="/tags/vi.html">vi</a>, <a title="All pages tagged &#39;prompt&#39;." href="/tags/prompt.html">prompt</a>, <a title="All pages tagged &#39;key bindings&#39;." href="/tags/key%20bindings.html">key bindings</a>, <a title="All pages tagged &#39;customization&#39;." href="/tags/customization.html">customization</a></div>
   </div>
 
   <div property="articleBody">
-    <p>Having a good working environment is vital for feeling comfortable being productive. This extends to computational tools and the <a href="https://en.wikipedia.org/wiki/command shell">command shell</a> is an integral part of the daily work for many of us. It’s a good idea to configure the shell’s interface to be efficient and pleasant to use. Here we see how <code>zsh</code>, arguably the best shell around, can be configured to suit the needs of people used to vi key bindings (which are arguably arguably superior and more ergonomical than the default emacs-style bindings)<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>.</p>
+    <p>Having a good working environment is vital for feeling comfortable being productive. This extends to computational tools and the <a href="https://en.wikipedia.org/wiki/command shell">command shell</a> is an integral part of the daily work for many of us. It’s a good idea to configure the shell’s interface to be efficient and pleasant to use. Here we see how <code>zsh</code>, arguably the best shell around, can be configured to suit the needs of people used to vi key bindings (which are arguably arguably superior and more ergonomical than the default emacs-style bindings)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
 <h2 id="using-vi-bindings-in-the-shell">Using vi-bindings in the shell</h2>
 <p>The first step towards nice vi key bindings is almost too easy: The red pill takes the form of</p>
-<div class="sourceCode" id="cb1" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">bindkey</span> -v</a></code></pre></div>
+<div class="sourceCode" id="cb1" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="ex">bindkey</span> -v</span></code></pre></div>
 <p>Type it into your prompt (and add it to your <code>.zshrc</code> file) and emacs bindings are going bye-bye. <code>Escape</code> will bring you to normal-mode, while <code>i</code>, <code>a</code>, <code>o</code> etc. will bring you back to insert-mode, just as with your favorite editor. Use <code>j</code> and <code>k</code> in normal-mode to go through your history and move around within the line with <code>h</code>, <code>l</code>, <code>w</code>, <code>b</code> and the like.</p>
 <p>This is a good start, let’s see how we can bring it from “this is nice” to “that’s just awesome”.</p>
 <p>First, we may want to keep some of the default key bindings in insert-mode since we’ve grown accustomed to them. No missing out, let’s put them back in:</p>
-<div class="sourceCode" id="cb2" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Kill input from the current point to the end of line with Ctrl-k</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ex">bindkey</span> <span class="st">&#39;^k&#39;</span> kill-line</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co"># Search the history incremantally with Ctrl-r</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="ex">bindkey</span> <span class="st">&#39;^r&#39;</span> history-incremental-search-backward</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co"># Insert and go through the &quot;last words&quot; of previous commands with Meta-.</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co"># (or Escape-. for that matter).</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="ex">bindkey</span> <span class="st">&#39;^[.&#39;</span> insert-last-word</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co"># Show the man-page or other helpful infos with Meta-h</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="ex">bindkey</span> <span class="st">&#39;^[h&#39;</span> run-help</a></code></pre></div>
+<div class="sourceCode" id="cb2" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Kill input from the current point to the end of line with Ctrl-k</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="ex">bindkey</span> <span class="st">&#39;^k&#39;</span> kill-line</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Search the history incremantally with Ctrl-r</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="ex">bindkey</span> <span class="st">&#39;^r&#39;</span> history-incremental-search-backward</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># Insert and go through the &quot;last words&quot; of previous commands with Meta-.</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># (or Escape-. for that matter).</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="ex">bindkey</span> <span class="st">&#39;^[.&#39;</span> insert-last-word</span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># Show the man-page or other helpful infos with Meta-h</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="ex">bindkey</span> <span class="st">&#39;^[h&#39;</span> run-help</span></code></pre></div>
 <p>You can take a look at the key bindings defined for emacs-mode by typing <code>bindkey -M emacs -L</code> and reuse the bindings you like. See the <code>zshzle</code> manpage for more pre-defined widgets for which you could define bindings.</p>
 <h2 id="configuring-the-prompt-to-show-the-current-editing-mode">Configuring the prompt to show the current editing mode</h2>
 <p>So the key bindings are quite usable now, but it’s a bit unfortunate that it is impossible to see if the shell is in insert- or normal-mode. There should be a mode indicator right in the shell prompt!</p>
-<div class="sourceCode" id="cb3" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># You may already have those in your .zshrc somewhere</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ex">autoload</span> -U promptinit <span class="kw">&amp;&amp;</span> <span class="ex">promptinit</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="ex">autoload</span> -U colors     <span class="kw">&amp;&amp;</span> <span class="ex">colors</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="ex">setopt</span> prompt_subst</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co"># Set the colors to your liking</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="bu">local</span> <span class="va">vi_normal_marker=</span><span class="st">&quot;[%{</span><span class="va">$fg[green]</span><span class="st">%}%BN%b%{</span><span class="va">$reset_color</span><span class="st">%}]&quot;</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="bu">local</span> <span class="va">vi_insert_marker=</span><span class="st">&quot;[%{</span><span class="va">$fg[cyan]</span><span class="st">%}%BI%b%{</span><span class="va">$reset_color</span><span class="st">%}]&quot;</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="bu">local</span> <span class="va">vi_unknown_marker=</span><span class="st">&quot;[%{</span><span class="va">$fg[red]</span><span class="st">%}%BU%b%{</span><span class="va">$reset_color</span><span class="st">%}]&quot;</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="bu">local</span> <span class="va">vi_mode=</span><span class="st">&quot;</span><span class="va">$vi_insert_marker</span><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="fu">vi_mode_indicator ()</span> <span class="kw">{</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13">  <span class="kw">case</span> <span class="va">${KEYMAP}</span><span class="kw"> in</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14">    <span class="kw">(</span>vicmd<span class="kw">)</span>      <span class="bu">echo</span> <span class="va">$vi_normal_marker</span> <span class="kw">;;</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15">    <span class="kw">(</span><span class="ex">main</span><span class="kw">|</span><span class="ex">viins</span><span class="kw">)</span> <span class="bu">echo</span> <span class="va">$vi_insert_marker</span> <span class="kw">;;</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16">    <span class="kw">(</span><span class="ex">*</span><span class="kw">)</span>          <span class="bu">echo</span> <span class="va">$vi_unknown_marker</span> <span class="kw">;;</span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17">  <span class="kw">esac</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="kw">}</span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co"># Reset mode-marker and prompt whenever the keymap changes</span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="kw">function</span><span class="fu"> zle-line-init</span> <span class="ex">zle-keymap-select</span> {</a>
-<a class="sourceLine" id="cb3-22" data-line-number="22">  <span class="va">vi_mode=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">vi_mode_indicator</span><span class="va">)</span><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23">  <span class="ex">zle</span> reset-prompt</a>
-<a class="sourceLine" id="cb3-24" data-line-number="24">}</a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="ex">zle</span> -N zle-line-init</a>
-<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="ex">zle</span> -N zle-keymap-select</a>
-<a class="sourceLine" id="cb3-27" data-line-number="27"></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co"># Multiline-prompts don&#39;t quite work with reset-prompt; we work around this by</span></a>
-<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co"># printing the first line(s) via a precmd which is executed before the prompt</span></a>
-<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co"># is printed.  The following can be integrated into PROMPT for single-line</span></a>
-<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="co"># prompts.</span></a>
-<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="co">#</span></a>
-<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="co"># Colorize freely</span></a>
-<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="bu">local</span> <span class="va">user_host=</span><span class="st">&#39;%B%n%b@%m&#39;</span></a>
-<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="bu">local</span> <span class="va">current_dir=</span><span class="st">&#39;%~&#39;</span></a>
-<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="fu">precmd ()</span> <span class="ex">print</span> -rP <span class="st">&quot;</span><span class="va">${user_host}</span><span class="st"> </span><span class="va">${current_dir}</span><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb3-37" data-line-number="37"></a>
-<a class="sourceLine" id="cb3-38" data-line-number="38"><span class="bu">local</span> <span class="va">return_code=</span><span class="st">&quot;%(?..%{</span><span class="va">$fg[red]</span><span class="st">%}%? %{</span><span class="va">$reset_color</span><span class="st">%})&quot;</span></a>
-<a class="sourceLine" id="cb3-39" data-line-number="39"><span class="va">PROMPT=</span><span class="st">&#39;${return_code}${vi_mode} %# &#39;</span></a></code></pre></div>
+<div class="sourceCode" id="cb3" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># You may already have those in your .zshrc somewhere</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="ex">autoload</span> -U promptinit <span class="kw">&amp;&amp;</span> <span class="ex">promptinit</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="ex">autoload</span> -U colors     <span class="kw">&amp;&amp;</span> <span class="ex">colors</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="ex">setopt</span> prompt_subst</span>
+<span id="cb3-6"><a href="#cb3-6"></a></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># Set the colors to your liking</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="bu">local</span> <span class="va">vi_normal_marker=</span><span class="st">&quot;[%{</span><span class="va">$fg[green]</span><span class="st">%}%BN%b%{</span><span class="va">$reset_color</span><span class="st">%}]&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="bu">local</span> <span class="va">vi_insert_marker=</span><span class="st">&quot;[%{</span><span class="va">$fg[cyan]</span><span class="st">%}%BI%b%{</span><span class="va">$reset_color</span><span class="st">%}]&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="bu">local</span> <span class="va">vi_unknown_marker=</span><span class="st">&quot;[%{</span><span class="va">$fg[red]</span><span class="st">%}%BU%b%{</span><span class="va">$reset_color</span><span class="st">%}]&quot;</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="bu">local</span> <span class="va">vi_mode=</span><span class="st">&quot;</span><span class="va">$vi_insert_marker</span><span class="st">&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="fu">vi_mode_indicator ()</span> <span class="kw">{</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>  <span class="kw">case</span> <span class="va">${KEYMAP}</span><span class="kw"> in</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a>    <span class="kw">(</span>vicmd<span class="kw">)</span>      <span class="bu">echo</span> <span class="va">$vi_normal_marker</span> <span class="kw">;;</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>    <span class="kw">(</span><span class="ex">main</span><span class="kw">|</span><span class="ex">viins</span><span class="kw">)</span> <span class="bu">echo</span> <span class="va">$vi_insert_marker</span> <span class="kw">;;</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>    <span class="kw">(</span><span class="ex">*</span><span class="kw">)</span>          <span class="bu">echo</span> <span class="va">$vi_unknown_marker</span> <span class="kw">;;</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a>  <span class="kw">esac</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="kw">}</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="co"># Reset mode-marker and prompt whenever the keymap changes</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="kw">function</span><span class="fu"> zle-line-init</span> <span class="ex">zle-keymap-select</span> {</span>
+<span id="cb3-22"><a href="#cb3-22"></a>  <span class="va">vi_mode=</span><span class="st">&quot;</span><span class="va">$(</span><span class="ex">vi_mode_indicator</span><span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a>  <span class="ex">zle</span> reset-prompt</span>
+<span id="cb3-24"><a href="#cb3-24"></a>}</span>
+<span id="cb3-25"><a href="#cb3-25"></a><span class="ex">zle</span> -N zle-line-init</span>
+<span id="cb3-26"><a href="#cb3-26"></a><span class="ex">zle</span> -N zle-keymap-select</span>
+<span id="cb3-27"><a href="#cb3-27"></a></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="co"># Multiline-prompts don&#39;t quite work with reset-prompt; we work around this by</span></span>
+<span id="cb3-29"><a href="#cb3-29"></a><span class="co"># printing the first line(s) via a precmd which is executed before the prompt</span></span>
+<span id="cb3-30"><a href="#cb3-30"></a><span class="co"># is printed.  The following can be integrated into PROMPT for single-line</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a><span class="co"># prompts.</span></span>
+<span id="cb3-32"><a href="#cb3-32"></a><span class="co">#</span></span>
+<span id="cb3-33"><a href="#cb3-33"></a><span class="co"># Colorize freely</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="bu">local</span> <span class="va">user_host=</span><span class="st">&#39;%B%n%b@%m&#39;</span></span>
+<span id="cb3-35"><a href="#cb3-35"></a><span class="bu">local</span> <span class="va">current_dir=</span><span class="st">&#39;%~&#39;</span></span>
+<span id="cb3-36"><a href="#cb3-36"></a><span class="fu">precmd ()</span> <span class="ex">print</span> -rP <span class="st">&quot;</span><span class="va">${user_host}</span><span class="st"> </span><span class="va">${current_dir}</span><span class="st">&quot;</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a></span>
+<span id="cb3-38"><a href="#cb3-38"></a><span class="bu">local</span> <span class="va">return_code=</span><span class="st">&quot;%(?..%{</span><span class="va">$fg[red]</span><span class="st">%}%? %{</span><span class="va">$reset_color</span><span class="st">%})&quot;</span></span>
+<span id="cb3-39"><a href="#cb3-39"></a><span class="va">PROMPT=</span><span class="st">&#39;${return_code}${vi_mode} %# &#39;</span></span></code></pre></div>
 <p>This gives a prompt in the style of</p>
 <pre><code>user@host /current/working/path
 [I] %
@@ -320,19 +453,19 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
 <p>where <code>[I]</code> is the insert-mode indicator and is changed to <code>[N]</code> when normal-mode is activated. Neat, isn’t it?</p>
 <h2 id="single--and-multi-key-shortcuts">Single- and multi-key shortcuts</h2>
 <p>This is all nice and dandy, but it’s not quite like vim yet. How about those sweet bindings where pressing <code>jj</code> in quick succession brings us to normal-mode without having to press <code>Esc</code>? Setting it up is easy as pie.</p>
-<div class="sourceCode" id="cb5" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Time in which two keys have to be pressed in order to be recognized as a</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># single command (in centiseconds, set to 0.4 sec by default -- may be</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co"># modified as needed).</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="bu">export</span> <span class="va">KEYTIMEOUT=</span>40</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="ex">bindkey</span> <span class="st">&#39;jj&#39;</span> vi-cmd-mode</a></code></pre></div>
+<div class="sourceCode" id="cb5" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Time in which two keys have to be pressed in order to be recognized as a</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co"># single command (in centiseconds, set to 0.4 sec by default -- may be</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="co"># modified as needed).</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="bu">export</span> <span class="va">KEYTIMEOUT=</span>40</span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="ex">bindkey</span> <span class="st">&#39;jj&#39;</span> vi-cmd-mode</span></code></pre></div>
 <p>We can also add two-key bindings to jump to the start and end of the line:</p>
-<div class="sourceCode" id="cb6" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Bind to both possible orders in which the keys could be pressed.</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co"># Move all the way to the left</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="ex">bindkey</span> <span class="st">&#39;;l&#39;</span> end-of-line</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="ex">bindkey</span> <span class="st">&#39;l;&#39;</span> end-of-line</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co"># Move all the way to the right</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="ex">bindkey</span> <span class="st">&#39;;h&#39;</span> beginning-of-line</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="ex">bindkey</span> <span class="st">&#39;h;&#39;</span> beginning-of-line</a></code></pre></div>
+<div class="sourceCode" id="cb6" data-org-language="sh"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Bind to both possible orders in which the keys could be pressed.</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co"># Move all the way to the left</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="ex">bindkey</span> <span class="st">&#39;;l&#39;</span> end-of-line</span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="ex">bindkey</span> <span class="st">&#39;l;&#39;</span> end-of-line</span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># Move all the way to the right</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="ex">bindkey</span> <span class="st">&#39;;h&#39;</span> beginning-of-line</span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="ex">bindkey</span> <span class="st">&#39;h;&#39;</span> beginning-of-line</span></code></pre></div>
 <p>Jumping to the beginning of the line is now as easy as pressing <code>;</code> and <code>h</code> at the same time. No need to switch to normal-mode and your fingers don’t leave the your keyboard’s home-row. Try it, it’s great!</p>
 <h2 id="more">More</h2>
 <p>Customizations like this can make it much more pleasant to use the command line and boost your productivity. If the above is still not enough, here are some more ideas:</p>
@@ -342,10 +475,10 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
 <li>Show the status of version control systems and build environments in the prompt.</li>
 </ul>
 <p>If you don’t feel like doing all the work yourself, I can heartly reommend you take a look at <a href="http://ohmyz.sh">oh-my-zsh</a>. It offers a great collection of ideas to build on and some really cool ready-to-use plugins. Have fun!</p>
-<section class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Emacs is a great program which I’ve been using for years and continue to use daily, but vi bindings just make good things better. Thanks to <a href="https://gitorious.org/evil/pages/Home">evil,</a> that’s not a problem.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Emacs is a great program which I’ve been using for years and continue to use daily, but vi bindings just make good things better. Thanks to <a href="https://gitorious.org/evil/pages/Home">evil,</a> that’s not a problem.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
   </div>
@@ -365,7 +498,7 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
     <div class="post-date">
       <time datetime="2014-05-09" property="datePublished">May  9, 2014</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/haskell.html">haskell</a>, <a href="/tags/pandoc.html">pandoc</a>, <a href="/tags/org-mode.html">org-mode</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;haskell&#39;." href="/tags/haskell.html">haskell</a>, <a title="All pages tagged &#39;pandoc&#39;." href="/tags/pandoc.html">pandoc</a>, <a title="All pages tagged &#39;org-mode&#39;." href="/tags/org-mode.html">org-mode</a></div>
   </div>
 
   <div property="articleBody">
@@ -389,7 +522,7 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
     <div class="post-date">
       <time datetime="2014-02-28" property="datePublished">February 28, 2014</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/hakyll.html">hakyll</a>, <a href="/tags/pandoc.html">pandoc</a>, <a href="/tags/emacs.html">emacs</a>, <a href="/tags/haskell.html">haskell</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;hakyll&#39;." href="/tags/hakyll.html">hakyll</a>, <a title="All pages tagged &#39;pandoc&#39;." href="/tags/pandoc.html">pandoc</a>, <a title="All pages tagged &#39;emacs&#39;." href="/tags/emacs.html">emacs</a>, <a title="All pages tagged &#39;haskell&#39;." href="/tags/haskell.html">haskell</a></div>
   </div>
 
   <div property="articleBody">
@@ -459,9 +592,9 @@ net.ipv6.conf.all.accept_source_route = 0</code></pre>
 </code></pre>
 <h3 id="source-code">Source Code</h3>
 <p>Muttering a greeting in Haskell:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ot">main ::</span> <span class="dt">IO</span> ()</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">main <span class="fu">=</span> putStrLn greeting</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="kw">where</span> greeting <span class="fu">=</span> <span class="st">&quot;moin&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb5-2"><a href="#cb5-2"></a>main <span class="ot">=</span> <span class="fu">putStrLn</span> greeting</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="kw">where</span> greeting <span class="ot">=</span> <span class="st">&quot;moin&quot;</span></span></code></pre></div>
 <pre class="ORG"><code>#+BEGIN_SRC haskell
 main :: IO ()
 main = putStrLn greeting
@@ -515,21 +648,21 @@ main = putStrLn greeting
     <div class="post-date">
       <time datetime="2013-12-02" property="datePublished">December  2, 2013</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/privacy.html">privacy</a>, <a href="/tags/http.html">http</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;privacy&#39;." href="/tags/privacy.html">privacy</a>, <a title="All pages tagged &#39;http&#39;." href="/tags/http.html">http</a></div>
   </div>
 
   <div property="articleBody">
     <p>I was faced with potential privacy issues while integrating Dave Gandy’s <a href="http://fontawesome.io">Font Awesome</a> into the page. The font itself is not to blame. On the contrary, the it is great! The methods by which it can be used, however, can be very problematic and open a channel for potential user tracking. This is not unique to this font but a very general problem.</p>
 <p>The Font Awesome website <a href="http://fontawesome.io/get-started">lists multiple options</a> of how to integrate the font into a website, most of which are fairly simple. The first method is also praised as the “easiest”, yet I decided against it to protect the blog readers’ privacy. Here is why.</p>
-<h2 id="foreign-vs.local-content">Foreign vs. Local Content</h2>
+<h2 id="foreign-vs.-local-content">Foreign vs. Local Content</h2>
 <p>Most projects aimed at websites and web development offer a very simple way of using the technology: Including very short snippets of code is enough to bring a wide range of new functionality to an otherwise plain site. The principle here is that a foreign server handles the content. The page merely instructs the browser to get that content and to mix it with what is received from the original site.</p>
 <p>As an example, this is the code which includes the popular <a href="http://jquery.com">jQuery</a> library into a page:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> src=</span><span class="st">&quot;//code.jquery.com/jquery-1.10.2.min.js&quot;</span><span class="kw">&gt;</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">&lt;/script&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> src=</span><span class="st">&quot;//code.jquery.com/jquery-1.10.2.min.js&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">&lt;/script&gt;</span></span></code></pre></div>
 <p>This instructs the browser to send a request to <code>code.jquery.com</code> and to receive the library file from there.</p>
 <p>Contrast this with</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> async=</span><span class="st">&quot;true&quot;</span><span class="ot"> src=</span><span class="st">&quot;/scripts/jquery.min.js&quot;</span><span class="kw">&gt;</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">&lt;/script&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">&lt;script</span><span class="ot"> type=</span><span class="st">&quot;text/javascript&quot;</span><span class="ot"> async=</span><span class="st">&quot;true&quot;</span><span class="ot"> src=</span><span class="st">&quot;/scripts/jquery.min.js&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">&lt;/script&gt;</span></span></code></pre></div>
 <p>The latter HTML snippet causes no request to foreign servers but loads everything from the currently visited domain. The content must be put on the server, but that is hardly ever a problem with open source projects. This is also the setup I chose for Font Awesome and other libraries used on this site.</p>
 <h2 id="information-disclosure">Information Disclosure</h2>
 <p>The privacy problem arising from the former inclusion method is inherent to the way browsers communicate with servers. All browser requests are sent with the Hypertext Transfer Protocol, %HTTP for short. When an %HTTP conforming browser request goes out to a third-party server, that server learns about</p>
@@ -538,13 +671,13 @@ main = putStrLn greeting
 <li>the users IP address, operating system, browser version and other potentially identifying information.</li>
 </ul>
 <p>In other words, the third-party is informed about the pages which are visited and how frequently users view them. The details of how much the third party really learns about a visitor depend on a number of variables, including the interest of the third party in user browsing-patterns. Privacy friendly third-party servers can stop a browser from making repeated requests for the same resource, thereby preventing the browser from disclosing more than the address of the first visited page. However, one address is always disclosed, regardless of server configuration.</p>
-<p>It should be clear now that third-party website content poses a privacy risk to website visitors. Control over the disclosure of surfing habits and over another method for user-tracking is handed over to a third party. The website creator chooses in the name of all visitors which other pages they have to trust. The visitor has no choice in this.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>It should be clear now that third-party website content poses a privacy risk to website visitors. Control over the disclosure of surfing habits and over another method for user-tracking is handed over to a third party. The website creator chooses in the name of all visitors which other pages they have to trust. The visitor has no choice in this.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="responsibility-of-webmasters">Responsibility of Webmasters</h2>
 <p>Including foreign content on a page is very common on the web, yet it is rarely ever necessary. Website operators are given the trust and data of their users. They should act responsibly and handle requests confidentially. Most importantly, they should not hand over user data to others. Setting foreign website content aside is one of the basic measures a webmaster should take to protect their users’ privacy.</p>
-<section class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Some commercial websites are well aware of the problem: The social news site <a href="http://reddit.com">reddit</a> offers a privacy related option to <q><em>“load core %JS libraries from reddit servers”</em></q>. It sets an example of how a website can give control in this matter back to the users. Unfortunately, the option became worthless when reddit decided to track its users with Google Analytics, eliminating all hopes for good privacy on that site. The JavaScript tracking code is loaded from Google’s servers regardless of whether the above option is set or not.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p> Some commercial websites are well aware of the problem: The social news site <a href="http://reddit.com">reddit</a> offers a privacy related option to <q><em>“load core %JS libraries from reddit servers”</em></q>. It sets an example of how a website can give control in this matter back to the users. Unfortunately, the option became worthless when reddit decided to track its users with Google Analytics, eliminating all hopes for good privacy on that site. The JavaScript tracking code is loaded from Google’s servers regardless of whether the above option is set or not.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
   </div>
@@ -564,7 +697,7 @@ main = putStrLn greeting
     <div class="post-date">
       <time datetime="2013-11-05" property="datePublished">November  5, 2013</time>
     </div>
-    <div class="post-tags">tagged with: <a href="/tags/command-line.html">command-line</a>, <a href="/tags/http.html">http</a>, <a href="/tags/shell%20script.html">shell script</a>, <a href="/tags/linux.html">linux</a></div>
+    <div class="post-tags">tagged with: <a title="All pages tagged &#39;command-line&#39;." href="/tags/command-line.html">command-line</a>, <a title="All pages tagged &#39;http&#39;." href="/tags/http.html">http</a>, <a title="All pages tagged &#39;shell script&#39;." href="/tags/shell%20script.html">shell script</a>, <a title="All pages tagged &#39;linux&#39;." href="/tags/linux.html">linux</a></div>
   </div>
 
   <div property="articleBody">
@@ -647,52 +780,6 @@ respond</code></pre>
 <p>We can test this by reloading our test page twice and… it works! We can reload as often as we want, the ETag header sent by the browser will not change unless we clear the browser’s cache. A stealthy kind of user tracking can be simulated with just a few lines of shell script.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Even though we used nothing but simple command line tools and shell scripting, we managed to build a simple server and to experiment with the ways in which stateless servers and stateful browseres can effect each other through %HTTP headers. Standard UNIX tools are very powerful by themselves; together with a tool like <code>netcat</code>, power and fun extend even into experiments with networking and default protocols.</p>
-  </div>
-</article>
-]]></summary>
-</entry>
-<entry>
-    <title>Russian Process Roulette</title>
-    <link href="https://zeitkraut.de/posts/2013-09-27-russian-process-roulette.html" />
-    <id>https://zeitkraut.de/posts/2013-09-27-russian-process-roulette.html</id>
-    <published>2013-09-27T00:00:00Z</published>
-    <updated>2013-09-27T00:00:00Z</updated>
-    <summary type="html"><![CDATA[<article vocab="http://schema.org/" typeof="BlogPosting">
-  <h1 property="headline">Russian Process Roulette</h1>
-
-  <div class="post-metadata">
-    <div class="post-date">
-      <time datetime="2013-09-27" property="datePublished">September 27, 2013</time>
-    </div>
-    <div class="post-tags">tagged with: <a href="/tags/command-line.html">command-line</a>, <a href="/tags/playground.html">playground</a>, <a href="/tags/linux.html">linux</a>, <a href="/tags/non-sense.html">non-sense</a></div>
-  </div>
-
-  <div property="articleBody">
-    <p>A couple of friends and I just discussed the idea of Russian Process Roulette: Everybody starts a little program which kills processes at random. The winner is the one whose computer remains usable the longest. Is this crazy? Yes. Immature? Sure. Fun? Definitely. Adviced against to actually play unless the consequences are fully understood? That too.</p>
-<p>Playing the game is as simple as starting a command like the following:</p>
-<pre class="shell"><code>while sleep 600; do kill -9 $(tr -cd &quot;[:digit:]&quot; &lt; /dev/urandom | head -c5); done</code></pre>
-<p>This one-liner will wake up every 10 minutes, generate a random 5-digit number and then kill the process with the corresponding process ID. It will run forever, until it is either stopped, kills itself or has successfully crashed the user’s session.</p>
-<p>Of course, there are some problems with this code. The time at which the next process will be killed is predictable, making it easier to prepare for the eventuality of a dying process. Worse, the range of random process ids (0 to 99999) is about three times as large as the actual range of process ids on a typical linux system (0 to 32768). This lowers the chance of hitting a valid process ID quite a bit. So let’s put our scripting-fu to some misguided use and “optimize” the code.</p>
-<p>The first step is to write a function which gives uniformly distributed random numbers below a threshold.</p>
-<pre class="shell"><code>random_number_below () {
-  local upperbound=$1
-  local candidate=$(( $1 + 1 ))
-  local maxlen=$(printf $upperbound | wc -c)
-  while [ $candidate -gt $upperbound ]
-  do
-      candidate=$(tr -cd &#39;[:digit:]&#39; &lt; /dev/urandom | head -c &quot;$maxlen&quot; )
-  done
-  echo $candidate
-}</code></pre>
-<p>Our random number generator is very very wasteful in terms of processor cycles. Even more, if the output of <code>/dev/urandom</code> is truly random, the function were not even guaranteed to terminate in any specified time frame. But given the nature of the application we have in mind, both caveats are completely acceptable here. Candidate numbers are generated by reading random characters from the systems urandom device, throwing away every character that isn’t a digit. After this, the candidate number is checked to make sure we haven’t generated a number greater than the specified upper bound. If that should be the case, we run the whole procedure again. Otherwise, the random number is returned. While wasteful, this function produces an unbiased uniform distribution on the interval [0, upperbound].</p>
-<p>The second problem, regarding the range of possible process identifiers, is easier to fix. A little bit of searching reveals that the largest possible process identifier can be read from the file <code>/proc/sys/kernel/pid_max</code>. With this functionality in our hands, we can now write a “better” Russian Process Roulette script.</p>
-<pre class="shell"><code>while sleep $(random_number_below 999)
-do
-    local maxpid=$(cat /proc/sys/kernel/pid_max)
-    kill -9 $(random_number_below &quot;$maxpid&quot;)
-done</code></pre>
-<p>We should (<em>probably not</em>) run this as <code>root</code>, thereby making sure no process is safe from our “process gun”.</p>
-<p>While the result of our efforts isn’t necessarily useful, it is still a nice exercises in shell scripting. Our game remains destructive and immature, but the execution is slightly more sophisticated. Hope you like it.</p>
   </div>
 </article>
 ]]></summary>
