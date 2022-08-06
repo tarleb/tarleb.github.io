@@ -1,22 +1,26 @@
 ---
-title: "About"
+title: "Albert Krewinkel"
+about:
+  template: jolla
+  image: albert.jpg
+  links:
+    - icon: twitter
+      text: twitter
+      href: https://twitter.com/kraut0xa
+    - icon: github
+      text: Github
+      href: https://github.com/tarleb
 ---
 
-### About the Author
+Albert is a molecular biologist turned mathematician turned
+software engineer. He is a passionate open source contributor with
+a special interest in open science and publishing workflows. He
+serves as a core developer for the universal document converter
+“pandoc”. After spending time in Lübeck, Hamburg, and Menlo Park,
+Albert now lives in Berlin with his wife and kids.
 
-This blog is written and maintained by Albert Krewinkel.
 
-Mail
-:   <albert@tarleb.com>
-
-GPG Key
-:   8eed e3e2 e8c5 6f18 81fe  e836 388d c0b2 1f63 1124
-
-Albert is a programmer with a background in math and biology. He
-lives in Berlin. His free and open-source software contributions
-are available through [GitHub](https://github.com/tarleb/).
-
-### About this Site
+## About this Site
 
 These pages are built using [Quarto](https://quarto.org). To learn
 more about Quarto websites visit
