@@ -1,5 +1,10 @@
 ---
 title: "tarleb's site"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
 ---
 
 This is an empty website.
