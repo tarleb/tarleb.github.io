@@ -10,8 +10,7 @@ This blog is written and maintained by
 [Albert Krewinkel]{property="name"}
 
 Mail
-:   [[obfuscated mail address]{}]{.obfuscated-mail-address
-    data-domain="zeitkraut.de" data-user="albert"}
+:   <albert@tarleb.com>
 
 GPG Key
 :   8eed e3e2 e8c5 6f18 81fe  e836 388d c0b2 1f63 1124

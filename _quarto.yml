@@ -17,3 +17,4 @@ format:
 
 filters:
   - _extensions/address.lua
+  - _extensions/css-mailto-obfuscation.lua
