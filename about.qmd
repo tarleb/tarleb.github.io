@@ -15,6 +15,15 @@ Mail:
 
 GPG Key
 :   8eed e3e2 e8c5 6f18 81fe  e836 388d c0b2 1f63 1124
+
+Postal address
+:   :::: address
+    | Albert Krewinkel
+    | c/o REGER GmbH
+    | Beerenstraße 53
+    | 14163 Berlin
+    | Germany
+    ::::
 :::
 
 Albert Krewinkel is a programmer with a background in math and biology. He
