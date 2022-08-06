@@ -9,7 +9,7 @@ This blog is written and maintained by
 ::: {#albertkrewinkel vocab="http://schema.org/" typeof="Person"}
 [Albert Krewinkel]{property="name"}
 
-Mail:
+Mail
 :   [[obfuscated mail address]{}]{.obfuscated-mail-address
     data-domain="zeitkraut.de" data-user="albert"}
 

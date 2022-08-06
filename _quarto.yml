@@ -15,5 +15,5 @@ format:
     css: styles.css
     toc: true
 
-
-
+filters:
+  - _extensions/address.lua
