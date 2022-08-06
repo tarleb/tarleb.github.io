@@ -35,7 +35,7 @@ when keeping everything bare-bones, the result is already decent:
 
 Produces
 
-![First page of unoptimized PDF](/img/lua-refman-naive.png)
+![First page of unoptimized PDF](lua-refman-naive.png)
 
 This requires a somewhat recent version of pandoc as well as
 XeLaTeX to be installed. It is possible to forgo the trouble of
@@ -107,7 +107,7 @@ contents by adding the `--toc` command line flag. The toc depth is
 controlled via `--toc-depth`; `2` is a good setting here. However,
 in this case, the result is neither pleasing nor informative:
 
-![Bad looking table of contents](/img/bad-toc.png)
+![Bad looking table of contents](bad-toc.png)
 
 Something is terribly wrong. By inspecting the parsed document by
 running `pandoc --to=native …`, we see that all *Header*s contain
@@ -142,7 +142,7 @@ end
 The filter also removes the section numbering. We add it back by
 passing `--number-sections` to pandoc.
 
-![less-bad table of contents](/img/less-bad-toc.png)
+![less-bad table of contents](less-bad-toc.png)
 
 Not bad.
 
