@@ -1,0 +1,27 @@
+---
+title: MetaNook2014 – Command Line Talk
+date: 2014-11-22
+categories:
+  - talk
+  - command-line
+---
+
+Last night was the night of this year's MetaNook. It was the
+fourth time that the local hackers, most notably [MetaMeute][] and
+[Chaotikum][], joined forces to organize a night full of
+beginner-friendly introductions, advanced tech talks, and project
+presentations.
+
+My [talk contribution][shell-talk] this year was a brief
+introduction in the “magic” of the command-line. The talk slides
+are adapted to the topic in that the presentation must be given
+from the command line. Each slide is just a function, the whole
+presentation environment is held together by scripts and other
+shell-equivalences of duckt-tape. Feedback from the thirty or-so
+attendees was mostly positive.
+
+It was a very fun experience over all, as usual.
+
+[MetaMeute]: https://metameute.de
+[Chaotikum]: https://chaotikum.org
+[shell-talk]: https://github.com/tarleb/shell-talk
