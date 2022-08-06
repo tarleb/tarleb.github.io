@@ -34,6 +34,6 @@ through [GitHub](https://github.com/tarleb/).
 
 ### About this Site
 
-The page is build using [Quarto](https://quarto.org). To learn
+These pages are built using [Quarto](https://quarto.org). To learn
 more about Quarto websites visit
 <https://quarto.org/docs/websites>.
