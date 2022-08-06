@@ -1,9 +1,11 @@
 ---
 title: How to configure zsh with vi bindings and nice shortcuts
 date: 2014-06-29
+description: >-
+  Getting a beautiful and informative command-line prompt, as well
+  as vi-like key bindings.
 categories:
-  - zsh
-  - vi
+  - command-line
   - key bindings
 ---
 

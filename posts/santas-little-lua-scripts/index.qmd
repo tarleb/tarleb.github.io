@@ -1,6 +1,9 @@
 ---
 title: Santa's Little Lua Scripts
 date: 2020-12-06
+description: >-
+  A Christmas story about using HsLua to make Haskell application
+  extendable.
 categories:
   - lua
   - hslua

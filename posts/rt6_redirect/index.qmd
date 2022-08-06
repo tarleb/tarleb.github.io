@@ -3,8 +3,7 @@ title: "rt6_redirect: source isn't a valid nexthop for redirect target"
 date: 2014-08-01
 categories:
   - security
-  - ipv6
-  - server
+  - sysadmin
 ---
 
 The zeitkraut server is configured to work with IPv6.  For quite some time
