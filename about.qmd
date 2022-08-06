@@ -4,10 +4,7 @@ title: "About"
 
 ### About the Author
 
-This blog is written and maintained by
-
-::: {#albertkrewinkel vocab="http://schema.org/" typeof="Person"}
-[Albert Krewinkel]{property="name"}
+This blog is written and maintained by Albert Krewinkel.
 
 Mail
 :   <albert@tarleb.com>
@@ -15,21 +12,9 @@ Mail
 GPG Key
 :   8eed e3e2 e8c5 6f18 81fe  e836 388d c0b2 1f63 1124
 
-Postal address
-:   :::: address
-    | Albert Krewinkel
-    | c/o REGER GmbH
-    | Beerenstraße 53
-    | 14163 Berlin
-    | Germany
-    ::::
-:::
-
-Albert Krewinkel is a programmer with a background in math and biology. He
-lives in Berlin.
-
-Albert’s free and open-source software contributions are available
-through [GitHub](https://github.com/tarleb/).
+Albert is a programmer with a background in math and biology. He
+lives in Berlin. His free and open-source software contributions
+are available through [GitHub](https://github.com/tarleb/).
 
 ### About this Site
 

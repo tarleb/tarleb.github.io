@@ -9,6 +9,8 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
+    right:
+      - imprint.qmd
   open-graph: true
   twitter-card:
     creator: '@kraut0xa'
