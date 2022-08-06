@@ -3,6 +3,7 @@ project:
 
 website:
   title: "tarleb.com"
+  favicon: favicon.svg
   navbar:
     left:
       - href: index.qmd
