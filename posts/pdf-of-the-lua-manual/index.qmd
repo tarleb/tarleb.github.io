@@ -193,8 +193,8 @@ doesn't allow chapters, so a different class has to be set with
 
 ## Summary
 
-For completeness, here is the full pandoc command used to generate
-the PDF:
+For completeness, [here is the complete filter](lua-manual-cleanup.lua),
+and this is the full pandoc command used to generate the PDF:
 
 ```bash
 pandoc \
@@ -214,5 +214,5 @@ freedom. Since we already cleaned the content up, we can now also
 create other formats, like an ebook, just by changing the name of
 the output file. The final results are available below:
 
- * [Lua 5.4 manual (PDF)](/docs/lua-5.4-manual.pdf)
- * [Lua 5.4 manual (EPUB)](/docs/lua-5.4-manual.epub)
+ * [Lua 5.4 manual (PDF)](lua-5.4-manual.pdf)
+ * [Lua 5.4 manual (EPUB)](lua-5.4-manual.epub)
