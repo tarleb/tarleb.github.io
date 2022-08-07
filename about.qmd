@@ -5,11 +5,14 @@ about:
   image: albert.jpg
   links:
     - icon: twitter
-      text: twitter
+      text: Twitter
       href: https://twitter.com/kraut0xa
     - icon: github
-      text: Github
+      text: GitHub
       href: https://github.com/tarleb
+    - icon: stack-overflow
+      text: StackOverflow
+      href: https://stackoverflow.com/users/2425163/tarleb
 ---
 
 Albert is a molecular biologist turned mathematician turned
