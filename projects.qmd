@@ -1,0 +1,44 @@
+---
+title: Projects
+date: 2022-08-07
+---
+
+Below is a list of projects that I've created, help to maintain,
+or that am otherwise involved with. You can support my Open Source
+efforts by [sponsoring ❤] me.
+
+[sponsoring ❤]: https://github.com/sponsors/tarleb
+
+## Software
+
+### Pandoc
+
+[Pandoc](https://pandoc.org) is a universal document converter
+created by [John MacFarlane](https://johnmacfarlane.net) in 2006,
+and I have been a regular contributor since 2014. Components that
+I've written include reader support for Emacs Org-mode, support
+for Jira wiki markup, and advanced table support in many readers
+and writers. Also, Lua filters and large parts of the [Lua
+subsystem] were authored by me.
+
+[Lua subsystem]: https://pandoc.org/lua-filters.html
+
+### HsLua
+
+[HsLua] is a collection HsLua is a collection of packages;
+together they provide bindings, wrappers, types, and helper
+functions that bridge Haskell and Lua. It was a single package
+when I took maintainance over in 2016. Since then the code has
+been rewritten completely, with many improvements in modularity,
+security, and performance.
+
+Pandoc's [Lua subsystem] remains the main driver for HsLua
+development.
+
+[HsLua]: https://hslua.org
+
+
+### Pandoc Docker Images
+
+We provide Docker images that bundle software typically used with
+pandoc. See <https://hub.docker.com/u/pandoc>.

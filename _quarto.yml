@@ -8,13 +8,15 @@ website:
     left:
       - href: index.qmd
         text: Home
+      - href: projects.qmd
+        text: Projects
       - href: about.qmd
         text: About
     right:
       - imprint.qmd
   open-graph: true
   twitter-card:
-    creator: '@kraut0xa'
+    creator: '@_tarleb'
 
 format:
   html:
