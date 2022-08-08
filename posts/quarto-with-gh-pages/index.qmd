@@ -1,0 +1,135 @@
+---
+title: Quarto Website with GitHub Actions
+date: 2022-08-08
+description: |
+  Using GitHub actions to render and publish a Quarto website.
+categories:
+  - quarto
+---
+
+[Quarto](https://quarto.org) makes it very easy to publish a
+website via GitHub Pages: It is as simple as running `quarto
+publish gh-pages`. Here we explore a slightly different method
+that uses a GitHub Action to publish the website automatically
+every time it is updated.
+
+## Classic GitHub Pages
+
+The classic way to publish a website via GitHub pages is to
+maintain a separate branch `gh-pages`. The branch is used to store
+the rendered HTML pages, and GitHub will publish the branch's
+contents as website everytime that branch is updated.
+
+Quarto uses this mechanism when called with
+
+```bash
+quarto publish gh-pages
+```
+
+We can combine this with GitHub Actions easily, ensuring that the
+site is updated every time new content is pushed to the main
+branch.
+
+``` yaml
+# file: .github/workflows/publish.yml
+name: Publish Website
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  quarto-publish:
+    name: Publish with Quarto
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+      - name: Publish to GitHub Pages
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+```
+
+The `quart-dev/quart-actions/publish` action calls `quarto
+publish` internally. This is short, to the point, and won't
+interfere with local calls to `quarto publish gh-pages`.
+
+## Actions-only Pages (Beta)
+
+GitHub recently added support for GitHub Pages that do not require
+an extra `gh-pages` branch. Instead, the website is compiled and
+pushed directly from an action.
+
+This takes slightly more code to set up, as the action must be
+granted the necessary permissions. However, it is still fairly
+short and quick to do.
+
+``` yaml
+# file: .github/workflows/publish.yml
+name: Publish Website
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  quarto:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+      - name: Setup Pages
+        uses: actions/configure-pages@v1
+      - name: Render Website
+        run: quarto render
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: '_site'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@main
+```
+
+Now we must change the setting to use the new publishing workflow:
+
+Under *Settings* → *Pages* → *Build and deployment* the
+source must be switched to "GitHub Action":
+
+![Required setting to enable the new method](pages-settings.png)
+
+The `gh-pages` branch is no longer needed and can be deleted.
+
+## Trade-offs
+
+The branch-based method for GitHub pages always felt slightly
+inelegant. I prefer the new method, as it does not require an
+extra branch and feels much cleaner. We lose the ability to update
+the website via `quarto publish`, but as I usually rely on GitHub
+Actions to perform the updates, it doesn't affect me much: `git
+push` has the same effect. However, it seems important to be aware
+of this trade-off.
