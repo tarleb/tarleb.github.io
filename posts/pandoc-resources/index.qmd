@@ -1,6 +1,6 @@
 ---
 title: Pandoc resources
-subtitle: An opinionated list
+subtitle: An opinionated list of essential online materials
 date: 2022-08-23
 image: 'pandoc.png'
 categories:
@@ -9,9 +9,9 @@ description: |
   A list with resources that pandoc users may find useful.
 ---
 
-In a world where I didn't know about [pandoc (the universal
-document converter)](https://pandoc.org/), these would be the
-resources that I'd like to have:
+These are the resources that I'd want to have if I was to learn
+about [pandoc (the universal document
+converter)](https://pandoc.org/) all over again:
 
 ## Installing
 
