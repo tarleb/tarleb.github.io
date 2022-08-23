@@ -47,7 +47,7 @@ converter)](https://pandoc.org/) all over again:
     extensions, etc.
 
     Note that this always documents the latest pandoc version. If
-    something isn't working, you may want to update.
+    something isn't working as documented, you may need to update.
 
 [FAQs](https://pandoc.org/faqs.html)
 :   Frequently Asked Questions; click on the questions to see the
@@ -62,11 +62,11 @@ converter)](https://pandoc.org/) all over again:
     constructors and utility functions exposed by pandoc.
 
 [Custom reader][readers]
-:   Interface to that allows to write parsers for otherwise
+:   Interface that allows to write parsers for otherwise
     unsupported formats.
 
 [Custom writers][writers]
-:   Interface to that allows to use pandoc to convert to a custom
+:   Interface that allows to use pandoc to convert to a custom
     output format.
 
 Format-specific documentation
