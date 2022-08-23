@@ -1,0 +1,125 @@
+---
+title: Pandoc resources
+subtitle: An opinionated list
+date: 2022-08-23
+image: 'pandoc.png'
+categories:
+  - pandoc
+description: |
+  A list with resources that pandoc users may find useful.
+---
+
+In a world where I didn't know about [pandoc (the universal
+document converter)](https://pandoc.org/), these would be the
+resources that I'd like to have:
+
+## Installing
+
+[latest release]
+:   The GitHub release page has installers for Windows, macOS, and
+    Linux.
+
+[Docker images]
+:   There are three types of pandoc Docker images:
+
+    - [minimal] – very small, just the bare pandoc binary;
+    - [core] – includes pandoc-crossref and helpers programs, e.g.
+      those used by pandoc for SVG image conversion;
+    - [latex][latex image] – like core, plus TeXLive with all
+      packages required by the default template.
+
+    These images can be used as an alternative to a system-wide
+    installation. The image repository descriptions also explain
+    how the images can be used.
+
+[latest release]: https://github.com/jgm/pandoc/release/latest
+[Docker images]: https://hub.docker.com/u/pandoc
+[minimal]: https://hub.docker.com/r/pandoc/minimal
+[core]: https://hub.docker.com/r/pandoc/core
+[latex image]: https://hub.docker.com/r/pandoc/latex
+
+## Documentation
+
+[manual][]
+:   The [official pandoc manual][manual]. When in doubt, this
+    should always be the first resource to check. It covers all
+    command line options, defaults files settings, format
+    extensions, etc.
+
+    Note that this always documents the latest pandoc version. If
+    something isn't working, you may want to update.
+
+[FAQ](https://pandoc.org/faq.html)
+:   Frequently Asked Questions; click on the questions to see the
+    answer.
+
+[Wiki](https://github.com/jgm/pandoc/wiki)
+:   Pandoc's GitHub wiki; contains many additional resources,
+    links, and tips.
+
+[Lua filters][filters]
+:   How to modify a document programmatically; also documents all
+    constructors and utility functions exposed by pandoc.
+
+[Custom reader][readers]
+:   Interface to that allows to write parsers for otherwise
+    unsupported formats.
+
+[Custom writers][writers]
+:   Interface to that allows to use pandoc to convert to a custom
+    output format.
+
+Format-specific documentation
+:   The support for some formats is tune-able enough to warrant
+    additional documentation.
+
+    - [EPUB](https://pandoc.org/epub.html) – How to make an ebook
+    - [Org](https://pandoc.org/org.html) – Emacs Org-mode
+    - [JATS](https://pandoc.org/jats.html) – The Journal Article
+      Tag Set
+
+[manual]: https://pandoc.org/MANUAL.html
+[Lua]: https://lua.org
+[filters]: https://pandoc.org/lua-filters
+[readers]: https://pandoc.org/custom-readers
+[writers]: https://pandoc.org/custom-writers
+
+## Getting help
+
+Please make sure to search the web before posting.
+
+[pandoc-discuss][]
+:   Official pandoc mailing list; usually the best way to get
+    help. The main developers and many seasoned users lurk here
+    and answer questions.
+
+    The web interface makes it seem like a Google account is
+    required to post, but this isn't so: Write a mail to
+    <mailto:pandoc-discuss+subscribe@googlegroups.com> to
+    subscribe to the list with any mail address.
+
+[StackOverflow][pandoc tag]
+:   Post here to reach a more programming oriented group of
+    people. Please *do not* cross-post, many people that follow
+    the [pandoc tag] have also subscribed to the mailing list.
+
+[TeX/LaTeX Stack Exchange](https://tex.stackexchange.com/)
+:   This is a good place to ask for help when pandoc is used to
+    generate PDFs via LaTeX. Be sure to include the (relevant
+    parts) of the generated LaTeX output in your question, as most
+    people there do not use pandoc. Some even seem to actively
+    dislike it, so be prepared.
+
+[pandoc-discuss]: https://groups.google.com/g/pandoc-discuss
+[pandoc tag]: https://stackoverflow.com/tags/pandoc/
+
+## Misc
+
+[@pandoc_tips](https://twitter.com/pandoc_tips)
+:   I use this Twitter account to post small tips and updates.
+
+[Quarto](https://quarto.org)
+:   Scientific and technical publishing system based on pandoc.
+
+[Zettlr](https://zettlr.com)
+:   Markdown editor with "zettelkasten" functionality.
