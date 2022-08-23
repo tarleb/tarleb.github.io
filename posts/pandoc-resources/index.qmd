@@ -49,7 +49,7 @@ converter)](https://pandoc.org/) all over again:
     Note that this always documents the latest pandoc version. If
     something isn't working, you may want to update.
 
-[FAQ](https://pandoc.org/faq.html)
+[FAQs](https://pandoc.org/faqs.html)
 :   Frequently Asked Questions; click on the questions to see the
     answer.
 
