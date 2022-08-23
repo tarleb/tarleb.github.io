@@ -32,7 +32,7 @@ converter)](https://pandoc.org/) all over again:
     installation. The image repository descriptions also explain
     how the images can be used.
 
-[latest release]: https://github.com/jgm/pandoc/release/latest
+[latest release]: https://github.com/jgm/pandoc/releases/latest
 [Docker images]: https://hub.docker.com/u/pandoc
 [minimal]: https://hub.docker.com/r/pandoc/minimal
 [core]: https://hub.docker.com/r/pandoc/core
