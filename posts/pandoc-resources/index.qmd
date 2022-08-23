@@ -1,12 +1,12 @@
 ---
 title: Pandoc resources
-subtitle: An opinionated list of essential online materials
 date: 2022-08-23
 image: 'pandoc.png'
 categories:
   - pandoc
 description: |
-  A list with resources that pandoc users may find useful.
+  An opinionated list of online materials that pandoc users may
+  find useful.
 ---
 
 These are the resources that I'd want to have if I was to learn
