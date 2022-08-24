@@ -3,6 +3,7 @@ project:
 
 website:
   title: "tarleb"
+  description: "tarleb's blog"
   favicon: favicon.svg
   navbar:
     left:
