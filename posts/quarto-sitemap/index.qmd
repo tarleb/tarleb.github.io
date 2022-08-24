@@ -1,0 +1,30 @@
+---
+title: Generating a sitemap with Quarto
+date: 2022-08-24
+categories:
+  - quarto
+description: |
+  TL;DR: Set the website's `site-url` property to generate a
+  `sitemap.xml` file.
+---
+
+Sitemaps are an easy way to list all pages that a search engine
+should crawl and index. Quarto supports the standard, XML based
+[Sitemap Protocol](https://www.sitemaps.org/protocol.html),
+although that fact is a bit hidden in the docs.
+
+Quarto will automatically produce a sitemap if the website's URL
+is given as `site-url` property:
+
+```yaml
+website:
+  title: tarleb
+  site-url: 'https://tarleb.com'
+  site-path: '/'
+```
+
+The URL will contain a colon `:`, which is why the YAML value
+must be put in quotes.
+
+You'll find the `sitemap.xml` file in your `_site` folder after
+re-rendering your pages with `quarto render`.
