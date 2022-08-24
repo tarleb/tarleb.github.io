@@ -1,11 +1,11 @@
 ---
 title: "tarleb's blog"
 listing:
+  categories: true
   contents: posts
+  feed: true
   sort: "date desc"
   type: default
-  categories: true
 ---
 
 Welcome to my blog.
-
