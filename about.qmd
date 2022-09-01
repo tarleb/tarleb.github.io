@@ -23,9 +23,9 @@ where I'm a core developer.
 
 I studied "molecular life science" and "mathematics in medicine
 and life science"[^1] at the University of Lübeck, from where I
-received a B.Sc. in the former and a M.Sc. in the latter. A highly
-enjoyable stint at the Max-Planck Institute for Evolutionary
-Biology led my path more towards programming, and I've been
+received a B.Sc. in the former and a M.Sc. in the latter.
+Ironically, it was an enjoyable stint at the Max-Planck Institute
+for Evolutionary Biology that led me more towards programming. I'm
 working as a software engineer since 2012.
 
 After spending time in Lübeck, Hamburg, and Menlo Park, I now
