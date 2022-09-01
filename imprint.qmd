@@ -1,9 +1,13 @@
 ---
-title: Imprint
+title: Imprint, Privacy Policy
 ---
 
+The information on this page is required by German law.
+
+## Imprint
+
 ::: {#albertkrewinkel vocab="http://schema.org/" typeof="Person"}
-[Albert Krewinkel]{property="name"}
+ViSdP: [Albert Krewinkel]{property="name"}
 
 Postal address
 :   :::: address
@@ -23,3 +27,14 @@ Mail
 GPG Key
 :   8eed e3e2 e8c5 6f18 81fe  e836 388d c0b2 1f63 1124
 :::
+
+## Privacy Policy
+
+This site is hosted via GitHub Pages, a service provided by
+GitHub, Inc. Please refer to the [GitHub Privacy Statement][] for
+information on data collection, retention, and use.
+
+No additional data is collected by the maintainer of this blog.
+
+
+[GitHub Privacy Statement]: https://docs.github.com/en/github/site-policy/github-privacy-statement
