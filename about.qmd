@@ -15,13 +15,24 @@ about:
       href: https://stackoverflow.com/users/2425163/tarleb
 ---
 
-Albert is a molecular biologist turned mathematician turned
-software engineer. He is a passionate open source contributor with
-a special interest in open science and publishing workflows. He
-serves as a core developer for the universal document converter
-“pandoc”. After spending time in Lübeck, Hamburg, and Menlo Park,
-Albert now lives in Berlin with his wife and kids.
+I'm Albert, a molecular biologist turned mathematician turned
+software engineer. I am interested in open source, with a special
+passion for open science and publishing workflows. My main
+involvement is with the universal document converter "pandoc",
+where I'm a core developer.
 
+I studied "molecular life science" and "mathematics in medicine
+and life science"[^1] at the University of Lübeck, from where I
+received a B.Sc. in the former and a M.Sc. in the latter. A highly
+enjoyable stint at the Max-Planck Institute for Evolutionary
+Biology led my path more towards programming, and I've been
+working as a software engineer since 2012.
+
+After spending time in Lübeck, Hamburg, and Menlo Park, I now
+live in Berlin with my wife and kids.
+
+[^1]: My diploma actually contains the old, less accurate name
+      of that program, "computational life science".
 
 ## About this Site
 
