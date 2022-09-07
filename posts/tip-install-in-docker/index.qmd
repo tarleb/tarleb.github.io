@@ -17,7 +17,7 @@ When pandoc is used in larger pipelines, e.g. in combination with
 everything up into one neat container. One option is to base the
 container on a pandoc image like `pandoc/core`, but this may be
 difficult due to other dependencies. In this case, the easiest
-option is to this:
+option is to do this:
 
 ``` Dockerfile
 COPY --from=pandoc/minimal:2.19.2 /pandoc /usr/bin/pandoc
@@ -26,7 +26,7 @@ COPY --from=pandoc/minimal:2.19.2 /pandoc /usr/bin/pandoc
 The snippet, when added to a Dockerfile, copies a statically
 compiled executable from an official build to `/usr/bin/pandoc`.
 The static pandoc binary can run on all Linux distributions, so it
-does not matter which image the custom build is based on.
+does not matter what distro the custom build is based on.
 
 The documentation for the
 <https://hub.docker.com/r/pandoc/minimal> has more info, including
