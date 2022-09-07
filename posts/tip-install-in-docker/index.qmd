@@ -1,0 +1,32 @@
+---
+title: Install pandoc in custom Docker images
+date: 2022-09-07
+description: |
+  Do you build custom Docker images and need a recent pandoc version
+  in there? It's as easy as
+  `COPY --from=pandoc/minimal:2.19.2 /pandoc
+  /usr/bin/pandoc`{style="white-space:unset"}
+categories:
+  - pandoc
+  - tip
+---
+
+When pandoc is used in larger pipelines, e.g. in combination with
+[Sphinx](https://sphinx-doc.org), it can be useful to pack
+everything up into one neat container. One option is to base the
+container on a pandoc image like `pandoc/core`, but this may be
+difficult due to other dependencies. In this case, the easiest
+option is to this:
+
+``` Dockerfile
+COPY --from=pandoc/minimal:2.19.2 /pandoc /usr/bin/pandoc
+```
+
+The snippet, when added to a Dockerfile, copies a statically
+compiled executable from an official build to `/usr/bin/pandoc`.
+The static pandoc binary can run on all Linux distributions, so it
+does not matter which image the custom build is based on.
+
+The documentation for the
+<https://hub.docker.com/r/pandoc/minimal> has more info, including
+a list of supported versions (tags).
