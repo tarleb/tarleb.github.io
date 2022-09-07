@@ -1,0 +1,26 @@
+---
+title: Document font
+date: 2022-09-07
+description: |
+  Control the document font with the `mainfont` variable. E.g., this
+  will use a standard sans-serif TeX font: `mainfont: Latin Modern
+  Sans`. Any system-wide font can be used when going via the XeLaTeX
+  engine, i.e., when pandoc is called with `--pdf-engine=xelatex`.
+categories:
+  - pandoc
+  - tip
+image: /images/pandoc-logo.png
+---
+
+Setting the document font this way works for ConTeXt, LaTeX, and
+HTML output. The fonts used in docx or odt output must be
+controlled with the reference document instead.
+
+The default LaTeX engine is pdflatex, which only supports TeX's
+own font format and cannot use the TrueType or OpenType fonts
+installed on the system. However, XeLaTeX was written with that in
+mind; switching to that engine allows to specify any font
+available on the system.
+
+A good source for free fonts is the [Google
+Fonts](https://fonts.google.com) repository.
