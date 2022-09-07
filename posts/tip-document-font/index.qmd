@@ -9,6 +9,8 @@ description: |
 categories:
   - pandoc
   - tip
+  - PDF
+  - HTML
 image: /images/pandoc-logo.png
 ---
 

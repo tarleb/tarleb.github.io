@@ -9,6 +9,7 @@ description: |
 categories:
   - pandoc
   - tip
+  - Docker
 ---
 
 When pandoc is used in larger pipelines, e.g. in combination with
