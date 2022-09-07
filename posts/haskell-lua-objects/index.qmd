@@ -8,12 +8,12 @@ categories:
   - Quarto
 ---
 
-When extending pandoc (or Quarto) with Lua filters, we use
-so-called Lua userdata objects. These objects are used to wrap
-document AST elements, making them accessible from Lua scripts.
-They mostly behave like normal Lua tables. This post is intended
-as a quick overview, listing interesting properties of userdata
-objects.
+When extending pandoc (or Quarto) with Lua filters, we interact
+with so-called Lua userdata objects. These objects are used to
+wrap document AST elements, making them accessible from Lua
+scripts. They mostly behave like normal Lua tables. This post is
+intended as a quick overview, listing interesting properties of
+userdata objects.
 
 ## Userdata objects
 
