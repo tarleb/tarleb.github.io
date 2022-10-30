@@ -1,0 +1,99 @@
+---
+title: Semantic line breaks
+subtitle: How to get a single sentence per line
+date: 2022-10-30
+description: |
+  How to convert documents such that the output has exactly one sentence
+  per line.
+categories:
+  - Markdown
+  - pandoc
+---
+
+Line breaks usually have no semantic meaning within a Markdown
+paragraph. However, using line breaks to mark the end of a sentece
+can help with productivity for various reasons.[^1] Documents with
+one sentence per line are also called "ventilated prose", and the
+[Write the {Ascii}Docs][wtad] website has a [good article on that
+topic][wtadvp].
+
+A question came up in a Slack channel, asking whether it was
+possible to convert existing Markdown docs to this style.
+Naturally, the answer is "pandoc can do that", but that isn't
+obvious here.
+
+The solution that I came up with is centered around pandoc's
+*SoftBreak* AST element. Pandoc uses SoftBreak elements internally
+to mark the place where line breaks occured in the input, but only
+if those breaks should be treated like spaces in most situations.
+The way to make those breaks visible in the output is to call
+pandoc with `--wrap=preserve` -- only then will a line break in
+the input result in a break in the output in the same location.
+
+```
+$ printf 'Hello\npandoc' | pandoc --to=markdown
+⇒ Hello pandoc
+
+$ printf 'Hello\npandoc' | pandoc --to=markdown --wrap=preserve
+⇒ Hello
+⇒ pandoc
+```
+
+We are going to use SoftBreak for semantic line breaks, so the
+first step is to get rid of the SoftBreak elements created during
+parsing. A Lua filter can do so with
+
+``` lua
+SoftBreak = function () return pandoc.Space() end
+```
+
+Then we check for strings that end with a period and are followed
+by a space. The space in such a combination is then turned into a
+SoftBreak.
+
+``` lua
+local function semantic_line_feeds (el)
+  local inlines = el.content
+  for i = 2, #inlines do
+    if inlines[i].t == 'Space' and
+       inlines[i-1].t == 'Str' and
+       inlines[i-1].text:match '%.$' then
+      inlines[i] = pandoc.SoftBreak()
+    end
+  end
+  return el
+end
+
+return {
+  -- remove soft breaks inserted during parsing.
+  {SoftBreak = function () return pandoc.Space() end},
+  -- insert semantic soft breaks
+  {Para = semantic_line_feeds, Plain = semantic_line_feeds},
+}
+```
+
+This filter can then be combined with the `--wrap=preserve` option
+to get the desired semantic line breaks.
+
+``` bash
+printf 'This. And that.' | pandoc -L semlf.lua --wrap=preserve
+⇒ This.
+⇒ And that.
+```
+
+There, mission accomplished.[^2]
+
+[^1]: It's not my cup of tea, but I can see why people might
+    like the concept.
+
+[^2]: There are some cases in which the filter does not give the
+    correct result, for example when using American-style
+    punctuation after quotes, or when a full sentence is
+    emphasized. It should be possible to fix the filter for these
+    edge cases, but it doesn't seem worth the effort: the
+    presented solution should work fine for 95\ % of all use
+    cases.
+
+
+[wtad]: https://writetheasciidocs.netlify.app
+[wtadvp]: https://writetheasciidocs.netlify.app/ventilated-prose
