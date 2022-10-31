@@ -8,4 +8,4 @@ listing:
   type: default
 ---
 
-Welcome to my blog.
+Welcome to my blog.[](https://scholar.social/@tarleb){rel="me"}
