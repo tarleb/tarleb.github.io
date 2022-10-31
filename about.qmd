@@ -4,6 +4,9 @@ about:
   template: jolla
   image: albert.jpg
   links:
+    - icon: mastodon
+      text: Mastodon
+      href: https://scholar.social/@tarleb
     - icon: twitter
       text: Twitter
       href: https://twitter.com/kraut0xa
