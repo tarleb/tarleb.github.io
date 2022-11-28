@@ -1,0 +1,180 @@
+---
+title: Auto-numbered list continuations
+subtitle: Writing long, interrupted lists, without counting items
+date: 2022-11-28
+description: |
+  How to ensure proper numbering of an ordered list that is
+  split into parts and scattered throughout a document.
+categories:
+  - Markdown
+  - pandoc
+  - filter
+---
+
+Pandoc's Markdown allows for "fancy lists", i.e., lists with
+different styles used for the marker of ordered list items.
+
+E.g., the list
+
+``` markdown
+(I)  primus
+(#)  secundus
+(#)  tertius
+```
+
+uses uppercase roman numerals and double parentheses for the
+markers. It gets rendered as
+
+> (I)  primus
+> (#)  secundus
+> (#)  tertius
+
+## Continuations
+
+The fancy lists feature also allows to continue lists after an
+intermediate paragraph:
+
+``` markdown
+i.   one
+#.   another
+
+Interruption; not part of any list.
+
+iii. continue
+#.   keep counting
+```
+
+This becomes
+
+> i.   one
+> #.   another
+>
+> Interruption; not part of any list.
+>
+> iii. continue
+> #.   keep counting
+
+While very convenient, this requires us to carefully keep book of
+the number of items in previous parts, or risk the item numbering
+to become inconsistent. Imagine having to find and update all
+other list parts after adding a single item somewhere. Tedious
+work, that gets tiresome quickly.
+
+## Convention
+
+Wanting none of this, we contrive a method that allows us to mark
+a list as a continuation. This way, we can search for those lists
+with a Lua filter and let pandoc do the counting and numbering for
+us.
+
+Our convention is this: any list that starts with a number of 90
+or above is treated as the continuation of a previous list. Why
+90? Because it's large, but still easy to express using roman
+numerals, should one be inclined to use those.
+
+``` markdown
+i.  primus
+ii. secundus
+
+Lorem ipsum.
+
+xc. alius item
+#.  ut custodians iens
+```
+
+## Lua doing the counting
+
+The next step is to let pandoc do the counting with the help of a
+Lua filter. In its simplest form, the filter will step through all
+ordered lists in the document, remember the number of items it has
+encountered, and renumber any list whose start is above our chosen
+threshold.
+
+``` lua
+local next_start = 1
+
+function OrderedList (ol)
+  if ol.start >= 90 then
+    ol.start = next_start
+    next_start = next_start + #ol.content
+  else
+    next_start = #ol.content + 1
+  end
+  return ol
+end
+```
+
+Applied to the example above, the filter produces the desired
+result:
+
+> i.  primus
+> ii. secundus
+>
+> Lorem ipsum.
+>
+> iii. alius item
+> iv. ut custodians iens
+
+## Refinements
+
+This is fairly good already. But what happens if there are *other*
+lists appearing in the intermediate blocks?
+
+```
+1. First item
+
+- Nested list:
+
+    a. alfa
+    b. bravo
+    c. charlie
+
+Which list will be continued?
+
+99. ???
+```
+
+With the current state of our filter, the last item will be
+numbered `d.`, which is most likely not what we want. So let's
+make the filter sensitive to the list style; only a list with the
+matching style will be continued.
+
+The style and delimiter of ordered list markers can be accessed
+via the element's `style` and `delimiter` property, respectively.
+We use those values to construct a string key under which the
+start number of the next continuation is stored in table
+`next_starts`.
+
+``` lua
+local next_starts = {}
+
+function OrderedList (ol)
+  local key = ol.style .. '|' .. ol.delimiter
+  if ol.start >= 90 then
+    ol.start = next_starts[key] or 1
+    next_starts[key] = ol.start + #ol.content
+  else
+    next_starts[key] = #ol.content + 1
+  end
+
+  return ol
+end
+```
+
+This way we can keep track of multiple lists, distinguishing
+between lists by using the style of their markers. The above now
+gets output as
+
+> 1. First item
+>
+> - Nested list:
+>
+>     a. alfa
+>     b. bravo
+>     c. charlie
+>
+> Which list will be continued?
+>
+> 2. ???
+
+Just what we want. Happy list writing!
