@@ -115,11 +115,16 @@ Please make sure to search the web before posting.
 
 ## Misc
 
-[@pandoc_tips](https://twitter.com/pandoc_tips)
-:   I use this Twitter account to post small tips and updates.
+[pandoc in the fediverse](https://fosstodon.org/@pandoc)
+:   I use this Mastodon account to post small tips and updates.
 
 [Quarto](https://quarto.org)
 :   Scientific and technical publishing system based on pandoc.
 
 [Zettlr](https://zettlr.com)
 :   Markdown editor with "zettelkasten" functionality.
+
+## Edits
+
+- *2022-12-09*: Added Mastodon account in favor of Twitter; the
+   account on the latter platform is no longer updated.
