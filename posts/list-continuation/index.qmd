@@ -62,7 +62,7 @@ work, that gets tiresome quickly.
 
 ## Convention
 
-Wanting none of this, we contrive a method that allows us to mark
+Wanting none of this, we magicked a method that allows us to mark
 a list as a continuation. This way, we can search for those lists
 with a Lua filter and let pandoc do the counting and numbering for
 us.
