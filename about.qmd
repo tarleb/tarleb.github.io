@@ -7,9 +7,6 @@ about:
     - icon: mastodon
       text: Mastodon
       href: https://scholar.social/@tarleb
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/kraut0xa
     - icon: github
       text: GitHub
       href: https://github.com/tarleb
