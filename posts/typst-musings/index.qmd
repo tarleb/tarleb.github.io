@@ -62,10 +62,10 @@ technological choices: Rust has the aura of a new and shiny tool
 that [everyone would like to use], *especially* the regulars on
 the aforementioned sites, who share an interest in the latest
 tools. An otherwise equivalent project written in a "boring"
-language like Python would likely have caused less interest.
+language like Python would likely have sparked less interest.
 
 I find it also important to note that Typst comes with *extensive
-documentation* that makes it easy to dive right in. It is too
+documentation* that makes it easy to dive right in. It is far too
 common in the programming world to release some cool new tool into
 the wild, but treating documentation as an unimportant
 afterthought. Yes, I'm guilty of that, too. Even the best tool can
