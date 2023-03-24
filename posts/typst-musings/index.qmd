@@ -174,12 +174,14 @@ interest.
 [CommonMark]: https://commonmark.org
 [ConTeXt]: https://wiki.contextgarden.net/
 [Dhall]: https://dhall-lang.org/
-[Jypyter]: https://jupyter.org
-[Quarto]: https://quarto.org
-[SciFlow]: https://sciflow.net
+[Jypyter]: https://jupyter.org/
+[Org]: https://orgmode.org/
+[Overleaf]: https://overleaf.com/
+[Quarto]: https://quarto.org/
+[SciFlow]: https://sciflow.net/
 [Stencila]: https://stenci.la/
-[WeasyPrint]: https://weasyprint.org
-[pandoc]: https://pandoc.org
-[speedata]: https://speedata.de
+[WeasyPrint]: https://weasyprint.org/
+[pandoc]: https://pandoc.org/
+[speedata]: https://speedata.de/
 [started work]: https://github.com/jgm/pandoc/issues/8713
 [everyone would like to use]: https://stackoverflow.blog/2023/01/26/comparing-tag-trends-with-our-most-loved-programming-languages/
