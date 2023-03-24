@@ -1,0 +1,178 @@
+---
+title: Typst Musings
+date: 2023-03-24
+categories:
+  - PDF
+---
+
+[Typst](https://typst.app), the new writing tool, was open sourced
+a couple of days ago. This is right up my alley of course, and I
+have a couple of thoughts on it, which I share here.
+
+## What is it?
+
+Typst is a writing tool that's described as a LaTeX alternative:
+it takes plain-text markup as input and can produce nice looking
+PDFs from that. The open-sourcing of the code created a lot of
+excitement and interest, with the GitHub repository getting stared
+over 7,000 in just a few days.
+
+The tool comes with fresh and interesting ideas, impressive
+technology, and a good bit of hype. So let's take a closer look.
+
+## How does it work?
+
+Typst is written in [Rust], a comparatively low-level programming
+language that fixes many shortcomings of other languages operating
+in the same domain. One interesting feature of Rust that Typst
+makes use of is compilation to web assembly, which allows to run
+Rust programs in the browser. This is how Typst can do the blazing
+fast PDF generation *in the browser*!
+
+Of course this only works if it is Rust all the way down, which
+has important consequences. My first thought when I looked at the
+code was that it suffered from some serious
+[nih](https://en.wikipedia.org/wiki/Not_invented_here) syndrome:
+basically the whole stack is built on libraries written by the
+Typst team, even when high-qualitify open source libraries where
+available and could have been used with Rust.
+
+But, while nih still seems relevant here and there, the majority
+of libraries make sense when viewed through the lens of
+wasm-compilation. My understanding is that it's not always easy to
+compile C libraries to wasm. And with a complex system like Typst,
+it is often essential to have full control over the underlying
+libraries. So I think most choices are quite reasonable.
+
+## What makes it popular?
+
+The Typst announcements on sites like Hacker News and <lobste.rs>
+ranked № 1, and the tool was mentioned in basically every social
+media circle and chat that I happen to be part of. There's clearly
+*a lot* of interest in a modernized version of LaTeX. Good ol' TeX
+and it's children have been around for a long while, and have
+essentially held the monopol on PDF production for typographically
+advanced documents; tools like HTML-to-PDF converters like
+[WeasyPrint] notwithstanding.
+
+But the need for a nicer PDF generator is probably not the only
+reason why Typst gained so much traction. I believe that a lot of
+interest from the programmer community is fueled by the
+technological choices: Rust has the aura of a new and shiny tool
+that [everyone would like to use], *especially* the regulars on
+the aforementioned sites, who share an interest in the latest
+tools. An otherwise equivalent project written in a "boring"
+language like Python would likely have caused less interest.
+
+I find it also important to note that Typst comes with *extensive
+documentation* that makes it easy to dive right in. It is too
+common in the programming world to release some cool new tool into
+the wild, but treating documentation as an unimportant
+afterthought. Yes, I'm guilty of that, too. Even the best tool can
+be unusable when its docs are missing or sparse. Typst didn't make
+this mistake, and I think it payed off.
+
+## Personal opinions
+
+I have worked on writing tools for most of my career. To no
+surprise, I suspect some room for improvement in Typst.
+
+### Scripting
+
+Probably my main concern is the scripting language: It seems very
+well designed, but I'm not convinced that it was necessary to
+create a completely new language. I actually believe that
+something like Lua, which is established but flexlible, would have
+worked well here. But what's more is that, if we accept that it
+was necessary to have a custom language, I would have preferred
+one that isn't Turing complete, i.e., one where we can be sure
+that document rendering will terminate. Something like [Dhall].
+
+As it currently stands we can neither reuse pre-existing code, nor
+do we have a guarantee that the document will stop evaluating at
+some point. It feels like a missed opportunity.
+
+### Notebooks
+
+Typst also seems to ignore the concept of *notebooks*. Science
+writing, which is one of the big fields where Typst can be useful,
+should always consider reproduciblity.
+
+Notebooks are great for that. They combine code for analyses and
+the descriptive text in a single place. The data is closely linked
+to the final tables and graphics. It is one of the great features
+of [Quarto], [Jupyter], [Org], even Mathematica. Notebook support
+is something that I'd expect from a scientific writing tool for
+medicine, psychology, and the natural sciences.
+
+On the other hand, this might not be as important if Typst can be
+used in combination with other tools. John MacFarlane of
+[CommonMark] and [pandoc] fame has [started work] on a Typst
+pandoc writer, which would allow to convert existing Markdown
+documents to Typst, and could enable the use of Typst as PDF
+generator while still writing Markdown and Python code in Quarto.
+
+### Preview
+
+A highly subjective topic is the live-preview. It's a technical
+masterpiece, as mentioned above, but I'm not fully sold on its
+usefulness. Personally, I would wish for (science) writers to put
+a bigger focus on the semantics and accessibility of their text
+instead of putting the visual presentation front and center. Which
+brings me to the next point.
+
+### Accessibility and metadata
+
+It's good practice to make PDFs accessible, which requires to add
+semantic information to a PDF instead "just" placing characters on
+a page. Accessibility is even a legal requirement for government
+issued documents in many countries. There are standards like
+PDF/A-1a and PDF/UA that ensure that people with disabilities can
+access the information contained in the PDF. This is currently not
+supperted in Typst. LaTeX is still trying to catch up there, too,
+while [ConTeXt] and [speedata] are doing well, for example.
+
+## Predictions
+
+I believe Typst will succeed, but not as a full-fledged writing
+tool. The greatest value I see is in the *interactive styling of
+PDFs*, something that puts Typst appart from all other solution
+out there. The potential to reach the critical mass of a
+sustainable open source project is there, too. The tech choices
+attract contributors, and the app is shiny and works well enough
+to make people want to use it.
+
+At the same time, I believe that Typst app won't take hold in
+science writing. Most of the current hype is contained to very
+technical circles. Scientists, writers, and others end-users don't
+have strong reasons to switch yet. Journals expect submissions to
+be done in Word or LaTeX, not PDF, and this won't change anytime
+soon. Typst will have to integrate itself into the current
+publishing landscape, and that's not a trivial task.
+
+For example, [SciFlow] and [Overleaf] already exist, cover most of
+the market needs, have a solid headstart, and are well aligned
+with the current publishing landscape. Any new tool has to compete
+with them. Also, let's not forget all the other tools that I
+mentioned above.
+
+A lot will depend on whether the Typst team can carve out a solid
+business niche around the project. All bets on the future of Typst
+are off if the Typst business should fail. Open source projects
+without corporate support tend to stay niche and/or die a slow
+death, but you never know.
+
+Either way, I will keep following the progress of Typst with great
+interest.
+
+[CommonMark]: https://commonmark.org
+[ConTeXt]: https://wiki.contextgarden.net/
+[Dhall]: https://dhall-lang.org/
+[Jypyter]: https://jupyter.org
+[Quarto]: https://quarto.org
+[SciFlow]: https://sciflow.net
+[WeasyPrint]: https://weasyprint.org
+[pandoc]: https://pandoc.org
+[speedata]: https://speedata.de
+[started work]: https://github.com/jgm/pandoc/issues/8713
+[everyone would like to use]: https://stackoverflow.blog/2023/01/26/comparing-tag-trends-with-our-most-loved-programming-languages/
