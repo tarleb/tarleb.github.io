@@ -115,11 +115,14 @@ generator while still writing Markdown and Python code in Quarto.
 ### Preview
 
 A highly subjective topic is the live-preview. It's a technical
-masterpiece, as mentioned above, but I'm not fully sold on its
-usefulness. Personally, I would wish for (science) writers to put
-a bigger focus on the semantics and accessibility of their text
-instead of putting the visual presentation front and center. Which
-brings me to the next point.
+masterpiece, and it sets Typst appart from all other tools that
+I've seen. What I'm not sold on is the usefulness of that feature
+in a writing app. It's an invitation to mix contents and layout,
+two things that are often kept separate for good reason.
+Personally, I wish writers would place be a bigger focus on the
+semantics and accessibility of their text instead of putting the
+visual presentation front and center. Which brings me to the next
+point.
 
 ### Accessibility and metadata
 
