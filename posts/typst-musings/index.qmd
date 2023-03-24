@@ -130,10 +130,10 @@ It's good practice to make PDFs accessible, which requires to add
 semantic information to a PDF instead of "just" placing characters
 on a page. Accessibility is even a legal requirement for
 government issued documents in many countries. There are standards
-like PDF/A-1a and PDF/UA that ensure that people with disabilities
-can access the information contained in the PDF. This is currently
-not supperted in Typst. LaTeX is still trying to catch up there,
-too, while [ConTeXt] and [speedata] are doing well, for example.
+like PDF/A-1a and PDF/UA that ensure people with disabilities can
+access the information contained in the PDF. This is currently not
+supperted in Typst. LaTeX is still trying to catch up there, too,
+while [ConTeXt] and [speedata] are doing well, for example.
 
 ## Predictions
 
