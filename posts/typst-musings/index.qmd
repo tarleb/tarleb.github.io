@@ -74,8 +74,9 @@ this mistake, and I think it payed off.
 
 ## Personal opinions
 
-This wouldn't be a proper tech blog post if it didn't come with
-some "I see room for improvements" comments. Here we go.
+This wouldn't be a proper "old man shakes fist at the clouds" tech
+blog post if it didn't come with a number of "I see room for
+improvements" comments. Here we go.
 
 ### Scripting
 
