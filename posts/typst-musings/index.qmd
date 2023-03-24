@@ -165,7 +165,8 @@ are off if the Typst business should fail. Open source projects
 without corporate support tend to stay niche and/or die a slow
 death, but you never know.
 
-Either way, I will keep following the progress of Typst with great
+Either way, I hope that the Typst team's hard work will pay off. I
+will continue to follow the project's progress with great
 interest.
 
 [CommonMark]: https://commonmark.org
