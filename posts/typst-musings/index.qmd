@@ -141,25 +141,25 @@ while [ConTeXt] and [speedata] are doing well, for example.
 
 I believe Typst will succeed, but not as a full-fledged writing
 tool. The greatest value I see is in the *responsive, interactive
-styling of PDFs*. It is truely unique and sets Typst appart from
-all other software out there. The potential to reach the critical
-mass of a sustainable open source project is there, too. The tech
-choices attract contributors, and the app is shiny and works well
-enough to make people want to use it.
+styling of PDFs*. That feature is truely unique and sets Typst
+appart from all other software out there. The potential to reach
+the critical mass of a sustainable open source project is there,
+too. The tech choices attract contributors, and the app is shiny
+and works well enough to make people want to use it.
 
-At the same time, I believe that Typst app won't take hold in
-science writing. Most of the current hype is contained to very
-technical circles. Scientists, writers, and others end-users don't
-have strong reasons to switch yet. Journals expect submissions to
-be done in Word or LaTeX, not PDF, and this won't change anytime
-soon. Typst will have to integrate itself into the current
-publishing landscape, and that's not a trivial task.
+At the same time, I believe that the Typst writing app won't take
+hold in scientific writing. Most of the current hype is contained
+to very technical circles, and scientists don't have strong
+reasons to switch yet. To the contrary, journals expect paper
+submissions to be done in Word or LaTeX, not PDF. This won't
+change anytime soon. Typst will have to integrate itself into the
+current publishing landscape, and that's not a trivial task.
 
 For example, [SciFlow] and [Overleaf] already exist, cover most of
 the market needs, have a solid headstart, and are well aligned
-with the current publishing landscape. Any new tool has to compete
-with them. Also, let's not forget all the other tools that I
-mentioned above.
+with the need of science publishers and authors. Any new tool has
+to compete with them. Also, let's not forget all the other tools
+that I mentioned above.
 
 A lot will depend on whether the Typst team can carve out a solid
 business niche around the project. All bets on the future of Typst
