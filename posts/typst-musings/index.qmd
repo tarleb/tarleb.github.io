@@ -74,12 +74,12 @@ this mistake, and I think it payed off.
 
 ## Personal opinions
 
-I have worked on writing tools for most of my career. To no
-surprise, I suspect some room for improvement in Typst.
+This wouldn't be a proper tech blog post if it didn't come with
+some "I see room for improvements" comments. Here we go.
 
 ### Scripting
 
-Probably my main concern is the scripting language: It seems very
+One of my main concerns is the scripting language: It seems very
 well designed, but I'm not convinced that it was necessary to
 create a completely new language. I actually believe that
 something like Lua, which is established but flexlible, would have
