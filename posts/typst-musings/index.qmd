@@ -102,9 +102,10 @@ should always consider reproduciblity.
 Notebooks are great for that. They combine code for analyses and
 the descriptive text in a single place. The data is closely linked
 to the final tables and graphics. It is one of the great features
-of [Quarto], [Jupyter], [Org], even Mathematica. Notebook support
-is something that I'd expect from a scientific writing tool for
-medicine, psychology, and the natural sciences.
+of [Quarto], [Jupyter], [Org], [Stencila], Mathematica, and so
+on. Notebook support is something that I'd expect from a
+scientific writing tool for medicine, psychology, and the natural
+sciences.
 
 On the other hand, this might not be as important if Typst can be
 used in combination with other tools. John MacFarlane of
@@ -176,6 +177,7 @@ interest.
 [Jypyter]: https://jupyter.org
 [Quarto]: https://quarto.org
 [SciFlow]: https://sciflow.net
+[Stencila]: https://stenci.la/
 [WeasyPrint]: https://weasyprint.org
 [pandoc]: https://pandoc.org
 [speedata]: https://speedata.de
