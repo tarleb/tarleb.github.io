@@ -140,12 +140,12 @@ while [ConTeXt] and [speedata] are doing well, for example.
 ## Predictions
 
 I believe Typst will succeed, but not as a full-fledged writing
-tool. The greatest value I see is in the *interactive styling of
-PDFs*, something that puts Typst appart from all other solution
-out there. The potential to reach the critical mass of a
-sustainable open source project is there, too. The tech choices
-attract contributors, and the app is shiny and works well enough
-to make people want to use it.
+tool. The greatest value I see is in the *responsive, interactive
+styling of PDFs*. It is truely unique and sets Typst appart from
+all other software out there. The potential to reach the critical
+mass of a sustainable open source project is there, too. The tech
+choices attract contributors, and the app is shiny and works well
+enough to make people want to use it.
 
 At the same time, I believe that Typst app won't take hold in
 science writing. Most of the current hype is contained to very
