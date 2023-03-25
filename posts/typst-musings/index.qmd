@@ -27,7 +27,7 @@ language that fixes many shortcomings of other languages operating
 in the same domain. One interesting feature of Rust that Typst
 makes use of is compilation to web assembly, which allows us to run
 Rust programs in the browser. This is how Typst can do the blazing
-fast PDF generation *in the browser*!
+fast PDF generation *in the browser!*
 
 Of course this only works if it is Rust all the way down, which
 has important consequences. My first thought when I looked at the
@@ -125,8 +125,8 @@ while [ConTeXt] and [speedata] are doing well, for example.
 ## Predictions
 
 I believe Typst will succeed, but not as a full-fledged writing
-tool. The greatest value I see is in the *responsive, interactive,
-and even collaborative styling of PDFs*. That feature is truly
+tool. The greatest value I see is in the **responsive, interactive,
+and even collaborative styling of PDFs**. That feature is truly
 unique and sets Typst appart from all other software out there.
 The tool obviously has the potential to reach the critical mass of
 contributors to become a sustainable open source project, and the
@@ -144,8 +144,8 @@ current publishing landscape, and that's not a trivial task.
 For example, [SciFlow], [Authorea], and [Overleaf] already exist,
 cover most of the market needs, have a solid headstart, and – this
 is the important part – are well aligned with the need of science
-publishers and authors. Any new tool has to compete with them.
-Also, let's not forget all the other tools that I mentioned above.
+publishers. Any new tool has to compete with them. Also, let's not
+forget all the other tools that I mentioned above.
 
 Regardless, I'm optimistic that Typst can carve out its own
 business niche to occupy. For example, hardly any of my points
