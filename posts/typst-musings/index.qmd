@@ -14,8 +14,8 @@ have a couple of thoughts on it, which I share here.
 Typst is a writing tool that's described as a LaTeX alternative:
 it takes plain-text markup as input and can produce nice looking
 PDFs from that. The open-sourcing of the code created a lot of
-excitement and interest, with the GitHub repository getting starred
-over 7,000 times in just a few days.
+excitement and interest, with the [GitHub repository] getting starred
+over 9,000 times in just a few days.
 
 The tool comes with fresh and interesting ideas, impressive
 technology, and a good bit of hype—so let's take a closer look.
@@ -46,7 +46,7 @@ libraries. So I think most choices are quite reasonable.
 
 ## What makes it popular?
 
-The Typst announcements on sites like Hacker News and <lobste.rs>
+The Typst announcements on sites like [Hacker News] and [lobste.rs]
 ranked № 1, and the tool was mentioned in basically every social
 media circle and chat that I happen to be part of. There's clearly
 *a lot* of interest in a modernized version of LaTeX. Good ol' TeX
@@ -103,13 +103,15 @@ tables and graphics. It is one of the great features of [Quarto],
 them them well suited for scientific writing in fields like
 medicine, psychology, and the natural sciences.
 
-This could be an issue for Typst, but I believe that it won't be a
+This could be an [issue] for Typst, but I believe that it won't be a
 problem when Typst is used in combination with other tools. John
 MacFarlane (of [CommonMark] and [pandoc] fame) has [started work]
 on a Typst pandoc writer, which will convert existing
 Markdown documents to Typst, and could enable the use of Typst as
 PDF generator while still writing Markdown and Python code in
 Quarto.
+
+[issue]: https://github.com/typst/typst/issues/117
 
 ### Accessibility and metadata
 
@@ -162,6 +164,9 @@ feedback on an earlier version of this post, and to [Ilona
 Silverwood][] for her skillful editing. This post became much better
 thanks to their input.
 
+[GitHub repository]: https://github.com/typst/typst
+[Hacker News]: https://news.ycombinator.com/item?id=35250210
+[lobste.rs]: https://lobste.rs/s/ko1yjj/typst_new_markup_based_typesetting
 [Authorea]: https://www.authorea.com/
 [CommonMark]: https://commonmark.org
 [ConTeXt]: https://wiki.contextgarden.net/
