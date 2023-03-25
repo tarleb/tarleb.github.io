@@ -14,18 +14,18 @@ have a couple of thoughts on it, which I share here.
 Typst is a writing tool that's described as a LaTeX alternative:
 it takes plain-text markup as input and can produce nice looking
 PDFs from that. The open-sourcing of the code created a lot of
-excitement and interest, with the GitHub repository getting stared
-over 7,000 in just a few days.
+excitement and interest, with the GitHub repository getting starred
+over 7,000 times in just a few days.
 
 The tool comes with fresh and interesting ideas, impressive
-technology, and a good bit of hype. So let's take a closer look.
+technology, and a good bit of hype—so let's take a closer look.
 
 ## How does it work?
 
 Typst is written in [Rust], a comparatively low-level programming
 language that fixes many shortcomings of other languages operating
 in the same domain. One interesting feature of Rust that Typst
-makes use of is compilation to web assembly, which allows to run
+makes use of is compilation to web assembly, which allows us to run
 Rust programs in the browser. This is how Typst can do the blazing
 fast PDF generation *in the browser*!
 
@@ -34,7 +34,7 @@ has important consequences. My first thought when I looked at the
 code was that it suffered from some serious
 [nih](https://en.wikipedia.org/wiki/Not_invented_here) syndrome:
 basically the whole stack is built on libraries written by the
-Typst team, even when high-qualitify open source libraries where
+Typst team, even when high-qualitify open source libraries were
 available and could have been used with Rust.
 
 But, while nih still seems relevant here and there, the majority
@@ -51,9 +51,9 @@ ranked № 1, and the tool was mentioned in basically every social
 media circle and chat that I happen to be part of. There's clearly
 *a lot* of interest in a modernized version of LaTeX. Good ol' TeX
 and it's children have been around for a long while, and have
-essentially held the monopol on PDF production for typographically
-advanced documents; tools like HTML-to-PDF converters like
-[WeasyPrint] notwithstanding.
+essentially held the monopoly on PDF production for typographically
+advanced documents (tools like HTML-to-PDF converters like
+[WeasyPrint] notwithstanding).
 
 But the need for a nicer PDF generator is probably not the only
 reason why Typst gained so much traction. I believe that a lot of
@@ -67,10 +67,10 @@ language like Python would likely have sparked less interest.
 I find it also important to note that Typst comes with *extensive
 documentation* that makes it easy to dive right in. It is far too
 common in the programming world to release some cool new tool into
-the wild, but treating documentation as an unimportant
+the wild, while treating documentation as an unimportant
 afterthought. Yes, I'm guilty of that, too. Even the best tool can
 be unusable when its docs are missing or sparse. Typst didn't make
-this mistake, and I think it payed off.
+this mistake, and I think it paid off.
 
 ## Personal opinions
 
@@ -106,7 +106,7 @@ medicine, psychology, and the natural sciences.
 This could be an issue for Typst, but I believe that it won't be a
 problem when Typst is used in combination with other tools. John
 MacFarlane (of [CommonMark] and [pandoc] fame) has [started work]
-on a Typst pandoc writer, which will allow to convert existing
+on a Typst pandoc writer, which will convert existing
 Markdown documents to Typst, and could enable the use of Typst as
 PDF generator while still writing Markdown and Python code in
 Quarto.
@@ -116,7 +116,7 @@ Quarto.
 It's good practice to make PDFs accessible, which requires to add
 semantic information to a PDF instead of "just" placing characters
 on a page. Accessibility is even a legal requirement for
-government issued documents in many countries. There are standards
+government-issued documents in many countries. There are standards
 like PDF/A-1a and PDF/UA that ensure people with disabilities can
 access the information contained in the PDF. This is currently not
 supperted in Typst. LaTeX is still trying to catch up there, too,
@@ -126,7 +126,7 @@ while [ConTeXt] and [speedata] are doing well, for example.
 
 I believe Typst will succeed, but not as a full-fledged writing
 tool. The greatest value I see is in the *responsive, interactive,
-and even collaborative styling of PDFs*. That feature is truely
+and even collaborative styling of PDFs*. That feature is truly
 unique and sets Typst appart from all other software out there.
 The tool obviously has the potential to reach the critical mass of
 contributors to become a sustainable open source project, and the
@@ -146,7 +146,7 @@ the market needs, have a solid headstart, and are well aligned
 with the need of science publishers and authors. Any new tool has
 to compete with them. Also, let's not forget all the other tools
 that I mentioned above. Regardless, I'm optimistic that there is a
-business niche that it can occupy.
+business niche that Typst can occupy.
 
 Either way, I hope that the Typst team's hard work will pay off,
 and I will continue to follow their progress with great interest.
