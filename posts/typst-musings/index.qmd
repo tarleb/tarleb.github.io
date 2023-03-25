@@ -142,15 +142,25 @@ change anytime soon. Typst will have to insert itself into the
 current publishing landscape, and that's not a trivial task.
 
 For example, [SciFlow], [Authorea], and [Overleaf] already exist,
-cover most of the market needs, have a solid headstart, and are
-well aligned with the need of science publishers and authors. Any
-new tool has to compete with them. Also, let's not forget all the
-other tools that I mentioned above.
+cover most of the market needs, have a solid headstart, and – this
+is the important part – are well aligned with the need of science
+publishers and authors. Any new tool has to compete with them.
+Also, let's not forget all the other tools that I mentioned above.
 
-Regardless, I'm optimistic that there is a business niche that
-Typst can occupy. I hope that the Typst team's hard work will pay
-off, and I will continue to follow their progress with great
-interest.
+Regardless, I'm optimistic that Typst can carve out its own
+business niche to occupy. For example, hardly any of my points
+above matter in print publishing. An indie book publisher that
+allows authors to use Typst for layouting would be amazing.
+
+I hope that the Typst team's hard work will pay off, and I will
+continue to follow their progress with great interest.
+
+## Acknowledgements
+
+Heart-felt thanks to [\@maegul@hachyderm.io] for the insightful
+feedback on an earlier version of this post, and to [Ilona
+Silverwood][] for her skillful editing. This post became much better
+thanks to their input.
 
 [Authorea]: https://www.authorea.com/
 [CommonMark]: https://commonmark.org
@@ -163,7 +173,9 @@ interest.
 [SciFlow]: https://sciflow.net/
 [Stencila]: https://stenci.la/
 [WeasyPrint]: https://weasyprint.org/
+[\@maegul@hachyderm.io]: https://hachyderm.io/@maegul
 [pandoc]: https://pandoc.org/
 [speedata]: https://speedata.de/
 [started work]: https://github.com/jgm/pandoc/issues/8713
 [everyone would like to use]: https://stackoverflow.blog/2023/01/26/comparing-tag-trends-with-our-most-loved-programming-languages/
+[Ilona Silverwood]: https://ilonasilverwood.github.io/
