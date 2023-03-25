@@ -83,7 +83,7 @@ improvements" comments. Here we go.
 One of my main concerns is the scripting language: It seems well
 designed, but I'm not convinced that it was necessary to create a
 completely new language. I actually believe that something like
-Lua, which is established but flexlible, would have worked well
+Lua, which is established[^1] but flexlible, would have worked well
 here. But what's more is that, if we accept that it was necessary
 to have a custom language, I would have preferred one that isn't
 Turing complete, i.e., one where we can be sure that document
@@ -164,6 +164,10 @@ feedback on an earlier version of this post, and to [Ilona
 Silverwood][] for her skillful editing. This post became much better
 thanks to their input.
 
+[^1]: I consider [Lua] to be *the* language of publishing tools.
+    It fuels [pandoc], [Quarto], [ConTeXt], [LuaLaTeX],
+    [speedata], [SILE], and probably a few more.
+
 [GitHub repository]: https://github.com/typst/typst
 [Hacker News]: https://news.ycombinator.com/item?id=35250210
 [lobste.rs]: https://lobste.rs/s/ko1yjj/typst_new_markup_based_typesetting
@@ -172,11 +176,14 @@ thanks to their input.
 [ConTeXt]: https://wiki.contextgarden.net/
 [Dhall]: https://dhall-lang.org/
 [Jupyter]: https://jupyter.org/
+[Lua]: https://lua.org/
+[LuaLaTeX]: http://luatex.org/
 [Org]: https://orgmode.org/
 [Overleaf]: https://overleaf.com/
 [Quarto]: https://quarto.org/
 [Rust]: https://www.rust-lang.org/
 [SciFlow]: https://sciflow.net/
+[SILE]: https://sile-typesetter.org/
 [Stencila]: https://stenci.la/
 [WeasyPrint]: https://weasyprint.org/
 [\@maegul@hachyderm.io]: https://hachyderm.io/@maegul
