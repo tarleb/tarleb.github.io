@@ -80,14 +80,14 @@ improvements" comments. Here we go.
 
 ### Scripting
 
-One of my main concerns is the scripting language: It seems very
-well designed, but I'm not convinced that it was necessary to
-create a completely new language. I actually believe that
-something like Lua, which is established but flexlible, would have
-worked well here. But what's more is that, if we accept that it
-was necessary to have a custom language, I would have preferred
-one that isn't Turing complete, i.e., one where we can be sure
-that document rendering will terminate. Something like [Dhall].
+One of my main concerns is the scripting language: It seems well
+designed, but I'm not convinced that it was necessary to create a
+completely new language. I actually believe that something like
+Lua, which is established but flexlible, would have worked well
+here. But what's more is that, if we accept that it was necessary
+to have a custom language, I would have preferred one that isn't
+Turing complete, i.e., one where we can be sure that document
+rendering will terminate. Something like [Dhall].
 
 As it currently stands we can neither reuse pre-existing code, nor
 do we have a guarantee that the document will stop evaluating at
@@ -95,36 +95,21 @@ some point. It feels like a missed opportunity.
 
 ### Notebooks
 
-Typst also seems to ignore the concept of *notebooks*. Science
-writing, which is one of the big fields where Typst can be useful,
-should always consider reproduciblity.
+Notebooks are great tool to improve reproducibility in science
+writing. The code for analyses is collocated with the descriptive
+text in a single place. The data is closely linked to the final
+tables and graphics. It is one of the great features of [Quarto],
+[Jupyter], [Org], [Stencila], Mathematica, and so on, which makes
+them them well suited for scientific writing in fields like
+medicine, psychology, and the natural sciences.
 
-Notebooks are great for that. They combine code for analyses and
-the descriptive text in a single place. The data is closely linked
-to the final tables and graphics. It is one of the great features
-of [Quarto], [Jupyter], [Org], [Stencila], Mathematica, and so
-on. Notebook support is something that I'd expect from a
-scientific writing tool for medicine, psychology, and the natural
-sciences.
-
-On the other hand, this might not be as important if Typst can be
-used in combination with other tools. John MacFarlane of
-[CommonMark] and [pandoc] fame has [started work] on a Typst
-pandoc writer, which would allow to convert existing Markdown
-documents to Typst, and could enable the use of Typst as PDF
-generator while still writing Markdown and Python code in Quarto.
-
-### Preview
-
-A highly subjective topic is the live-preview. It's a technical
-masterpiece, and it sets Typst appart from all other tools that
-I've seen. What I'm not sold on is the usefulness of that feature
-in a writing app. It's an invitation to mix contents and layout,
-two things that are often kept separate for good reason.
-Personally, I wish writers would place be a bigger focus on the
-semantics and accessibility of their text instead of putting the
-visual presentation front and center. Which brings me to the next
-point.
+This could be an issue for Typst, but I believe that it won't be a
+problem when Typst is used in combination with other tools. John
+MacFarlane (of [CommonMark] and [pandoc] fame) has [started work]
+on a Typst pandoc writer, which will allow to convert existing
+Markdown documents to Typst, and could enable the use of Typst as
+PDF generator while still writing Markdown and Python code in
+Quarto.
 
 ### Accessibility and metadata
 
@@ -140,36 +125,31 @@ while [ConTeXt] and [speedata] are doing well, for example.
 ## Predictions
 
 I believe Typst will succeed, but not as a full-fledged writing
-tool. The greatest value I see is in the *responsive, interactive
-styling of PDFs*. That feature is truely unique and sets Typst
-appart from all other software out there. The potential to reach
-the critical mass of a sustainable open source project is there,
-too. The tech choices attract contributors, and the app is shiny
-and works well enough to make people want to use it.
+tool. The greatest value I see is in the *responsive, interactive,
+and even collaborative styling of PDFs*. That feature is truely
+unique and sets Typst appart from all other software out there.
+The tool obviously has the potential to reach the critical mass of
+contributors to become a sustainable open source project, and the
+tech choices help attract contributors. Last but not least, the
+app is shiny, works well, and makes people want to use it.
 
 At the same time, I believe that the Typst writing app won't take
-hold in scientific writing. Most of the current hype is contained
-to very technical circles, and scientists don't have strong
-reasons to switch yet. To the contrary, journals expect paper
-submissions to be done in Word or LaTeX, not PDF. This won't
-change anytime soon. Typst will have to integrate itself into the
+hold in scientific writing. Most of the current enthusiasm is
+contained to very technical circles, and scientists don't have
+strong reasons to switch yet. To the contrary, journals expect
+paper submissions to be done in Word or LaTeX, not PDF. This won't
+change anytime soon. Typst will have to insert itself into the
 current publishing landscape, and that's not a trivial task.
 
 For example, [SciFlow] and [Overleaf] already exist, cover most of
 the market needs, have a solid headstart, and are well aligned
 with the need of science publishers and authors. Any new tool has
 to compete with them. Also, let's not forget all the other tools
-that I mentioned above.
+that I mentioned above. Regardless, I'm optimistic that there is a
+business niche that it can occupy.
 
-A lot will depend on whether the Typst team can carve out a solid
-business niche around the project. All bets on the future of Typst
-are off if the Typst business should fail. Open source projects
-without corporate support tend to stay niche and/or die a slow
-death, but you never know.
-
-Either way, I hope that the Typst team's hard work will pay off. I
-will continue to follow the project's progress with great
-interest.
+Either way, I hope that the Typst team's hard work will pay off,
+and I will continue to follow their progress with great interest.
 
 [CommonMark]: https://commonmark.org
 [ConTeXt]: https://wiki.contextgarden.net/
