@@ -166,10 +166,11 @@ thanks to their input.
 [CommonMark]: https://commonmark.org
 [ConTeXt]: https://wiki.contextgarden.net/
 [Dhall]: https://dhall-lang.org/
-[Jypyter]: https://jupyter.org/
+[Jupyter]: https://jupyter.org/
 [Org]: https://orgmode.org/
 [Overleaf]: https://overleaf.com/
 [Quarto]: https://quarto.org/
+[Rust]: https://www.rust-lang.org/
 [SciFlow]: https://sciflow.net/
 [Stencila]: https://stenci.la/
 [WeasyPrint]: https://weasyprint.org/
