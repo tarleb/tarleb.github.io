@@ -95,7 +95,7 @@ some point. It feels like a missed opportunity.
 
 ### Notebooks
 
-Notebooks are great tool to improve reproducibility in science
+Notebooks are a great tool to improve reproducibility in science
 writing. The code for analyses is collocated with the descriptive
 text in a single place. The data is closely linked to the final
 tables and graphics. It is one of the great features of [Quarto],
