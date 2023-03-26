@@ -100,7 +100,7 @@ writing. The code for analyses is collocated with the descriptive
 text in a single place. The data is closely linked to the final
 tables and graphics. It is one of the great features of [Quarto],
 [Jupyter], [Org], [Stencila], Mathematica, and so on, which makes
-them them well suited for scientific writing in fields like
+them well suited for scientific writing in fields like
 medicine, psychology, and the natural sciences.
 
 This could be an [issue] for Typst, but I believe that it won't be a
@@ -145,7 +145,7 @@ current publishing landscape, and that's not a trivial task.
 
 For example, [SciFlow], [Authorea], and [Overleaf] already exist,
 cover most of the market needs, have a solid headstart, and – this
-is the important part – are well aligned with the need of science
+is the important part – are well aligned with the needs of science
 publishers. Any new tool has to compete with them. Also, let's not
 forget all the other tools that I mentioned above.
 
