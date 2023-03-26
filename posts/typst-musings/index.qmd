@@ -143,7 +143,7 @@ submissions to be done in Word or LaTeX, not PDF. This won't
 change anytime soon. Typst will have to insert itself into the
 current publishing landscape, and that's not a trivial task.
 
-For example, [SciFlow], [Authorea], and [Overleaf] already exist,
+For example, [SciFlow] and [Overleaf] already exist,
 cover most of the market needs, have a solid headstart, and – this
 is the important part – are well aligned with the needs of science
 publishers. Any new tool has to compete with them. Also, let's not
@@ -167,6 +167,12 @@ thanks to their input.
 [^1]: I consider [Lua] to be *the* language of publishing tools.
     It fuels [pandoc], [Quarto], [ConTeXt], [LuaLaTeX],
     [speedata], [SILE], and probably a few more.
+
+## Updates
+
+An earlier version listed [Authorea] as an authoring tool, but the
+platform has shifted focus since I last looked at it, so I've
+removed it.
 
 [GitHub repository]: https://github.com/typst/typst
 [Hacker News]: https://news.ycombinator.com/item?id=35250210
