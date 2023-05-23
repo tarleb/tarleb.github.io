@@ -1,0 +1,64 @@
+---
+title: What's so great about Quarto?
+date: 2022-08-11
+draft: true
+description: |
+  Quarto is based on pandoc, but what does it add, what's
+  different, and is it worth using for authors not using Python or
+  R? This post tackles these questions and explains what it is
+  that sets Quarto apart from other projects.
+---
+
+I'm a long time pandoc contributor, implemented pandoc [Lua
+filters][] and [rebuilt](https://hslua.org) the Lua subsystem. It
+should come as no surprise that I like a project that's built on
+my work and that makes heavy use of the Lua system.
+
+But that's not the only reason Quarto that I like Quarto. Here
+I'll dive into the properties that I like most about it.
+
+[Lua filters]: https://pandoc.org/lua-filters
+
+## Featureful
+
+Markdown is light: quick to learn, easy to write, but also limited
+by design. Pandoc adds many useful Markdown extensions like tables
+and citations. Quarto takes this a step further: it adds a number
+of useful extensions on its own.
+
+## Consistent
+
+Amassing features in a product is comparatively easy, but making a
+featureful project *good* is hard. The best products are those
+that feel natural to use, those where you might stumble upon an
+unknown features because it's the obvious way to do something.
+E.g., Markdown feels like that to those who have written
+plain-text mail.
+
+Quarto does well in that regard: there are very few principles
+like
+
+- "use delimited divs for advanced layouting",
+- "if it could be a YAML option, then it probably is",
+- "processing magic requires shortcodes",
+
+and a few more. If you know these things and come across a new
+`.qmd` file, you'll most likely have no problem to understand what
+it does, even if it uses features that you had no idea even
+existed.
+
+## Transparent
+
+Wrapper software aim to make the underlying software easier to use
+by adding simplifying abstractions. Nobody needs to know that
+Quarto uses pandoc for document conversions, it is hidden below
+the interface. But to those who care, the abstractions are
+transparent. I'm used to mending my publishing tools until they
+fill my requirements. Making it easy to look under the hood, so to
+speak, is probably one of the most important features for me.
+
+I was delighted to learn about `quarto pandoc`, the command that
+allows to call pandoc directly should one need it. Similarly,
+[reveal.js] is used just as transparently.
+
+## Pragmatic
