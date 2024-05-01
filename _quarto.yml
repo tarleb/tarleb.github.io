@@ -20,8 +20,6 @@ website:
   open-graph: true
   site-url: 'https://tarleb.com'
   site-path: '/'
-  twitter-card:
-    creator: '@_tarleb'
 
 format:
   html:
